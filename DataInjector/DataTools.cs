@@ -1,49 +1,78 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using RazorEngine;
 using System.Xml;
-using System.Xml.XPath;
-using System.Xml.Linq;
 using Encoding = System.Text.Encoding;
 
 
 namespace DataInjector
 {
-    internal class DataTools
+    public class DataTools
     {
-        public static String InsertDate(Stream content)
+        public static Stream EncodeAtSigns(String path)
         {
-            var transformReader = new StreamReader(content);
-            var contentString = transformReader.ReadToEnd();
-            var preparedContent = contentString.Replace("@", "BLURGTWONK");
-            var preparedBytes = Encoding.UTF8.GetBytes(preparedContent);
-            var preparedStream = new MemoryStream(preparedBytes);
+            using (var content = new FileStream(path, FileMode.Open))
+            {
+                var transformReader = new StreamReader(content);
+                var contentString = transformReader.ReadToEnd();
+                var preparedContent = contentString.Replace("@", "U+10FFFD");
+                var preparedBytes = Encoding.UTF8.GetBytes(preparedContent);
+                return new MemoryStream(preparedBytes);
+            }
+        }
 
-            //TODO: Redo with XDocument?
+        public static string DetectAndConvertTemplateTags(Stream content)
+        {
+            //Redo with XDocument? No, it adds a reader in order to handle namespaces, and that's unnecessary complexity.
+            //If this code needs to be refactored it may as well be done in xdocument though.
 
             var n = new NameTable();
             var nsm = new XmlNamespaceManager(n);
             nsm.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
             var document = new XmlDocument();
-            document.Load(preparedStream);
+            document.Load(content);
 
             XmlNodeList nodes = document.SelectNodes(@"//text:text-input[ @text:description = 'Template']", nsm);
 
             if (nodes != null)
                 foreach (XmlNode xmlNode in nodes)
                 {
-                    var flagAttr = xmlNode.InnerText; // .Attributes["text:description"]; //, "urn:oasis:names:tc:opendocument:xmlns:text:1.0"];
-                    var preparedFlag = flagAttr.Replace("BLURGTWONK", "@");
-                    //If our node has no parent then something is wrong enough to warrant throwing an exception.
+                    var flagAttr = xmlNode.InnerText;
+                    var preparedFlag = flagAttr.Replace("U+10FFFD", "@");
                     var newNode = document.CreateTextNode(preparedFlag);
-                    //xmlNode.ParentNode.AppendChild(newNode);
-                    xmlNode.ParentNode.ReplaceChild(newNode, xmlNode);
+                    
+                    
+                        if (xmlNode.ParentNode != null)
+                        {
+                            xmlNode.ParentNode.ReplaceChild(newNode, xmlNode);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Template nodes are in the root of the document! Why is your XML terrible?");
+                        }
+                    
+                   
                 }
-            var model = new {Date = DateTime.Today, Name = "Fancypants McSnooterson"};
-            string razorOutput = Razor.Parse(document.OuterXml, model);
-            return razorOutput.Replace("BLURGTWONK", "@");
+            return document.OuterXml;
+        }
+
+
+        public static String InsertData(string path, object model)
+        {
+            using (Stream preparedStream = EncodeAtSigns(path)
+                )
+            {
+                var preparedTemplate = DetectAndConvertTemplateTags(preparedStream);
+
+                return RazorAndReinsertAtSigns(preparedTemplate, model);
+            }
+        }
+
+
+        public static string RazorAndReinsertAtSigns(string template, object model)
+        {
+            string razorOutput = Razor.Parse(template, model);
+            return razorOutput.Replace("U+10FFFD", "@");
         }
     }
 }

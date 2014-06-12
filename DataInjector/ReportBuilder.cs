@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using Ionic.Zip;
-using System.IO;
 using ZipFile = Ionic.Zip.ZipFile;
 
 
@@ -13,25 +10,21 @@ namespace DataInjector
     public class ReportBuilder
     {
         //Path is the path to the template file
-        public static string Main(string path)
+        public static string Main(string path, object model)
         {
-            var folderPath = PathTools.RemoveFileNameFromPath(path);
+            var folderPath = FileSystem.RemoveFileNameFromPath(path);
 
-            var tempFilePath = PathTools.TempFolderMaker(folderPath);
-
+            var tempFilePath = FileSystem.CreateTempFolder(folderPath);  
 
             CompressionTools.UnzipToDirectory(path, tempFilePath);
-            var contentPath = tempFilePath + "\\content.xml";
-            string xmlContent;
-            using (var contentStream = new FileStream(contentPath, FileMode.Open))
-            {
-                xmlContent = DataTools.InsertDate(contentStream);
-            }
 
+            var contentPath = FileSystem.LocateContent(tempFilePath);
 
-            File.WriteAllText(tempFilePath + "\\content.xml", xmlContent);
-            var reportsFolderPath = tempFilePath.Substring(0,
-                                                           tempFilePath.LastIndexOf("\\", StringComparison.Ordinal));
+            var xmlContent = DataTools.InsertData(contentPath, model);
+
+            File.WriteAllText(contentPath, xmlContent);
+
+            var reportsFolderPath = tempFilePath.Substring(0, tempFilePath.LastIndexOf("\\", StringComparison.Ordinal));
 
             var fileList = Directory.EnumerateFiles(tempFilePath);
             var reportPath = reportsFolderPath + "\\Report_1.odt";
@@ -54,30 +47,33 @@ namespace DataInjector
                     {
                         if (file.EndsWith("mimetype")) continue;
                         var entryString = file.Substring(file.LastIndexOf("\\", StringComparison.Ordinal));
-                        var entry = output.PutNextEntry(entryString);
+                        output.PutNextEntry(entryString);
 
                         WriteExistingFile(fs, output);
                     }
                 }
+                output.Flush();
+                output.Close();
             }
-            var zippedFile = new ZipFile(reportPath);
-            var folders = new string[] {tempFilePath +"\\Configurations2", tempFilePath+ "\\META-INF",tempFilePath+ "\\Thumbnails"};
-            foreach (var folder in folders)
+            using (var zippedFile = new ZipFile(reportPath))
             {
-                zippedFile.AddDirectory(folder, folder.Substring(folder.LastIndexOf("\\", StringComparison.Ordinal)));
+                var folders = new[]
+                    {tempFilePath + "\\Configurations2", tempFilePath + "\\META-INF", tempFilePath + "\\Thumbnails"};
+                foreach (var folder in folders)
+                {
+                    zippedFile.AddDirectory(folder, folder.Substring(folder.LastIndexOf("\\", StringComparison.Ordinal)));
+                }
+
+                zippedFile.Save();
+
+                Directory.Delete(tempFilePath, true);
+                return reportPath;
             }
-            zippedFile.Save();
-            zippedFile.Dispose();
-
-
-
-            Directory.Delete(tempFilePath, true);
-            return folderPath;
         }
 
         private static void WriteExistingFile(Stream input, ZipOutputStream output)
         {
-            int n = -1;
+            int n;
             var buffer = new byte[2048];
             while ((n = input.Read(buffer, 0, buffer.Length)) > 0)
             {

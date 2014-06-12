@@ -5,21 +5,30 @@ using System.Text;
 
 namespace DataInjector
 {
-    internal class PathTools
+    internal class FileSystem
     {
-        public static string TempFolderMaker(string path, string desiredPath = "\\Generated Reports\\temp")
+        private static void NormalizeAttributes(string path)
         {
-            var tempfolderpath = path + desiredPath;
-            Directory.CreateDirectory(tempfolderpath);
             var info = new DirectoryInfo(path);
+
             foreach (var file in info.GetFiles("*", SearchOption.AllDirectories))
             {
                 file.Attributes = FileAttributes.Normal;
             }
+
             foreach (var  folder in info.GetDirectories("*", SearchOption.AllDirectories))
             {
                 folder.Attributes = FileAttributes.Normal;
             }
+        }
+
+        public static string CreateTempFolder(string path, string desiredExtension = "\\Generated Reports\\temp")
+        {
+            var tempfolderpath = path + desiredExtension;
+
+            Directory.CreateDirectory(tempfolderpath);
+
+            NormalizeAttributes(path);
 
             return tempfolderpath;
         }
@@ -30,15 +39,18 @@ namespace DataInjector
             var pathBuilder = new StringBuilder();
             var pathPieces = pathPiecesArray.ToList();
             pathPieces.RemoveRange(pathPieces.Count - 1, 1);
-
             foreach (var piece in pathPieces)
             {
                 pathBuilder.Append(piece + "\\");
             }
-
-            string returnPath = pathBuilder.ToString();
+            var returnPath = pathBuilder.ToString();
             returnPath = returnPath.Substring(0, returnPath.LastIndexOf("\\", StringComparison.Ordinal));
             return returnPath;
+        }
+
+        public static string LocateContent(string path)
+        {
+            return path + "\\content.xml";
         }
     }
 }
