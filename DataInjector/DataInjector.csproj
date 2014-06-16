@@ -33,14 +33,14 @@
     <Reference Include="AODL">
       <HintPath>..\packages\AODL.1.2.0.1\lib\AODL.dll</HintPath>
     </Reference>
+    <Reference Include="EnsureThat">
+      <HintPath>..\packages\Ensure.That.1.0.0\lib\portable-win+net40+sl40+wp71\EnsureThat.dll\EnsureThat.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\AODL.1.2.0.1\lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core">
       <HintPath>..\packages\NUnitTestAdapter.1.0\lib\nunit.core.dll</HintPath>
@@ -80,7 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressionTools.cs" />
+    <Compile Include="DecompressionService.cs" />
     <Compile Include="ReportTemplateService.cs" />
     <Compile Include="DocumentDeconstructService.cs" />
     <Compile Include="DocumentReconstructService.cs" />

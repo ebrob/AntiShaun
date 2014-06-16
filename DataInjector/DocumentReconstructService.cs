@@ -5,7 +5,12 @@ using Ionic.Zip;
 
 namespace DataInjector
 {
-    public class DocumentReconstructService
+    public interface IDocumentReconstructService
+    {
+        string Reconstruct(string tempFolderPath, string xmlContent);
+    }
+
+    public class DocumentReconstructService : IDocumentReconstructService
     {
         public string Reconstruct(string tempFolderPath, string xmlContent)
         {

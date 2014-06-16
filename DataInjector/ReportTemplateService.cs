@@ -6,7 +6,12 @@ using Encoding = System.Text.Encoding;
 
 namespace DataInjector
 {
-    public class ReportTemplateService
+    public interface IReportTemplateService
+    {
+        string ApplyTemplate(string templateContent, object model);
+    }
+
+    public class ReportTemplateService : IReportTemplateService
     {
         public string ApplyTemplate(string templateContent, object model)
         {

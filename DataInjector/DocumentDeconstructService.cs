@@ -3,7 +3,13 @@ using System.IO;
 
 namespace DataInjector
 {
-    public class DocumentDeconstructService : IDisposable
+    public interface IDocumentDeconstructService
+    {
+        string Deconstruct(string pathToDocument);
+        string TempFolderPath { get; }
+    }
+
+    public class DocumentDeconstructService : IDisposable, IDocumentDeconstructService
     {
         public string Deconstruct(string pathToDocument)
         {
