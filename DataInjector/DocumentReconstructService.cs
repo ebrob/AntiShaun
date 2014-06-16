@@ -2,31 +2,20 @@
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
-using ZipFile = Ionic.Zip.ZipFile;
-
 
 namespace DataInjector
 {
-    public class ReportBuilder
+    public class DocumentReconstructService
     {
-        //Path is the path to the template file
-        public static string Main(string path, object model)
+        public string Reconstruct(string tempFolderPath, string xmlContent)
         {
-            var folderPath = FileSystem.RemoveFileNameFromPath(path);
-
-            var tempFilePath = FileSystem.CreateTempFolder(folderPath);  
-
-            CompressionTools.UnzipToDirectory(path, tempFilePath);
-
-            var contentPath = FileSystem.LocateContent(tempFilePath);
-
-            var xmlContent = DataTools.InsertData(contentPath, model);
-
+            var contentPath = Path.Combine(tempFolderPath, "content.xml");
             File.WriteAllText(contentPath, xmlContent);
 
-            var reportsFolderPath = tempFilePath.Substring(0, tempFilePath.LastIndexOf("\\", StringComparison.Ordinal));
+            var reportsFolderPath = tempFolderPath.Substring(0,
+                                                             tempFolderPath.LastIndexOf("\\", StringComparison.Ordinal));
 
-            var fileList = Directory.EnumerateFiles(tempFilePath);
+            var fileList = Directory.EnumerateFiles(tempFolderPath);
             var reportPath = reportsFolderPath + "\\Report_1.odt";
             using (var output = new ZipOutputStream(reportPath))
             {
@@ -58,7 +47,10 @@ namespace DataInjector
             using (var zippedFile = new ZipFile(reportPath))
             {
                 var folders = new[]
-                    {tempFilePath + "\\Configurations2", tempFilePath + "\\META-INF", tempFilePath + "\\Thumbnails"};
+                    {
+                        tempFolderPath + "\\Configurations2", tempFolderPath + "\\META-INF",
+                        tempFolderPath + "\\Thumbnails"
+                    };
                 foreach (var folder in folders)
                 {
                     zippedFile.AddDirectory(folder, folder.Substring(folder.LastIndexOf("\\", StringComparison.Ordinal)));
@@ -66,7 +58,7 @@ namespace DataInjector
 
                 zippedFile.Save();
 
-                Directory.Delete(tempFilePath, true);
+                Directory.Delete(tempFolderPath, true);
                 return reportPath;
             }
         }

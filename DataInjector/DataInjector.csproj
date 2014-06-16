@@ -81,10 +81,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompressionTools.cs" />
-    <Compile Include="DataTools.cs" />
+    <Compile Include="ReportTemplateService.cs" />
+    <Compile Include="DocumentDeconstructService.cs" />
+    <Compile Include="DocumentReconstructService.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="PermissionChecker.cs" />
-    <Compile Include="ReportBuilder.cs" />
+    <Compile Include="ReportBuilderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
