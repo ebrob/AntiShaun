@@ -5,28 +5,29 @@ namespace DataInjector
 {
     public interface IDocumentDeconstructService
     {
-        string Deconstruct(string pathToDocument);
+        string UnzipAndGetContent(string pathToDocument);
         string TempFolderPath { get; }
     }
 
+
     public class DocumentDeconstructService : IDisposable, IDocumentDeconstructService
     {
-        public string Deconstruct(string pathToDocument)
+        private readonly FileSystemService _fileSystemService = new FileSystemService();
+
+        public string UnzipAndGetContent(string pathToDocument)
         {
-            var folderPath = FileSystem.RemoveFileNameFromPath(pathToDocument);
-            TempFolderPath = FileSystem.CreateTempFolder(folderPath);
-            using (var decompressionService = new DecompressionService())
-            {
-                decompressionService.UnzipToDirectory(pathToDocument, TempFolderPath);
-            }
-            var contentPath = FileSystem.LocateContent(TempFolderPath);
+            var contentPath = _fileSystemService.UnzipAndGetContentPath(pathToDocument);
 
             string contentString;
+
             using (var content = new FileStream(contentPath, FileMode.Open))
             {
                 var transformReader = new StreamReader(content);
                 contentString = transformReader.ReadToEnd();
             }
+
+            TempFolderPath = _fileSystemService.TempFolderPath;
+
             return contentString;
         }
 

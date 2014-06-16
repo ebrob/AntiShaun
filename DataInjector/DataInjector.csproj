@@ -84,7 +84,7 @@
     <Compile Include="ReportTemplateService.cs" />
     <Compile Include="DocumentDeconstructService.cs" />
     <Compile Include="DocumentReconstructService.cs" />
-    <Compile Include="FileSystem.cs" />
+    <Compile Include="FileSystemService.cs" />
     <Compile Include="PermissionChecker.cs" />
     <Compile Include="ReportBuilderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

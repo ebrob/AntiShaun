@@ -28,32 +28,32 @@ namespace TestProject
         [Test]
         public void DeconstructsDocument()
         {
-            _mockDeconstruct.Setup(x => x.Deconstruct("c:\\spot\\run"));
+            _mockDeconstruct.Setup(x => x.UnzipAndGetContent("c:\\spot\\run"));
             _sut.DoStuff(Path, _model);
-            _mockDeconstruct.Verify(x => x.Deconstruct("c:\\spot\\run"));
+            _mockDeconstruct.Verify(x => x.UnzipAndGetContent("c:\\spot\\run"));
         }
 
         [Test]
         public void TemplatesDocument()
         {
-            _mockDeconstruct.Setup(x => x.Deconstruct("c:\\spot\\run")).Returns("FakeXmlContent");
+            _mockDeconstruct.Setup(x => x.UnzipAndGetContent("c:\\spot\\run")).Returns("FakeXmlContent");
             _mockTemplate.Setup(x => x.ApplyTemplate("FakeXmlContent", _model));
             _sut.DoStuff(Path, _model);
             _mockTemplate.Verify(x => x.ApplyTemplate("FakeXmlContent", _model));
-            _mockDeconstruct.Verify(x => x.Deconstruct("c:\\spot\\run"));
+            _mockDeconstruct.Verify(x => x.UnzipAndGetContent("c:\\spot\\run"));
         }
 
         [Test]
         public void ReconstructsDocument()
         {
             _mockDeconstruct.SetupGet(x => x.TempFolderPath).Returns("FakeTempPath");
-            _mockDeconstruct.Setup(x => x.Deconstruct("c:\\spot\\run")).Returns("FakeXmlContent");
+            _mockDeconstruct.Setup(x => x.UnzipAndGetContent("c:\\spot\\run")).Returns("FakeXmlContent");
             _mockTemplate.Setup(x => x.ApplyTemplate("FakeXmlContent", _model)).Returns("FakeTransformedContent");
             _mockReconstruct.Setup(x => x.Reconstruct("FakeTempPath", "FakeTransformedContent"));
 
             _sut.DoStuff(Path, _model);
 
-            _mockDeconstruct.Verify(x => x.Deconstruct("c:\\spot\\run"));
+            _mockDeconstruct.Verify(x => x.UnzipAndGetContent("c:\\spot\\run"));
             _mockTemplate.Verify(x => x.ApplyTemplate("FakeXmlContent", _model));
             _mockReconstruct.Verify(x => x.Reconstruct("FakeTempPath", "FakeTransformedContent"));
         }

@@ -21,7 +21,7 @@ namespace DataInjector
         public string DoStuff(string path, object model)
         {
             Ensure.That(path).IsNotNullOrWhiteSpace();
-            var templateContent = _deconstructService.Deconstruct(path);
+            var templateContent = _deconstructService.UnzipAndGetContent(path);
             
             var xmlContent = _templateService.ApplyTemplate(templateContent, model);
 
