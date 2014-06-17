@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using NUnit.Framework;
 using DataInjector;
 
@@ -9,6 +10,12 @@ namespace TestProject
     [TestFixture]
     public class IntegrationTests
     {
+        private class Client : Object
+        {
+            public string FirstName;
+            public string Lastname;
+        }
+
         [Test]
         public void CorrectlyCompilesAndParsesBasicTemplate()
         {
@@ -19,18 +26,29 @@ namespace TestProject
         }
 
         [Test]
-        [ExpectedException]
-        public void BreaksOnBadModel()
+        public void CorrectlyParsesTemplateWithForeachLoop()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
                                                    new DocumentReconstructService());
-            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 2.odt",
-                            new {Date = DateTime.Now.Day, Name = "Fancypants McSnooterson"});
+            dynamic model = new ExpandoObject();
+
+            dynamic client1 = new ExpandoObject();
+            client1.FirstName = "FancyPants";
+            client1.Lastname = "McSnooterson";
+            dynamic client2 = new ExpandoObject();
+            client2.FirstName = "Bob";
+            client2.Lastname = "Jones";
+
+
+            model.Clients = new List<dynamic>();
+            model.Clients.Add(client1);
+            model.Clients.Add(client2);
+            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 2.odt", model);
         }
 
 
         [Test]
-        public void CorrectlyParsesTemplateWithForeachLoop()
+        public void BreaksOnBadModel()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
                                                    new DocumentReconstructService());
@@ -38,6 +56,13 @@ namespace TestProject
                             new {});
         }
 
-
+        [Test]
+        public void HandlesConditionals()
+        {
+            var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
+                                                   new DocumentReconstructService());
+            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 4.odt",
+                            new {Variable = 0, Var1 = "Var1"});
+        }
     }
-} 
+    }
