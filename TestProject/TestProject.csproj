@@ -72,10 +72,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="IntegrationTest.cs" />
+    <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DeconstructServiceTests.cs" />
-    <Compile Include="ReportBuilderServiceTest.cs" />
+    <Compile Include="ReportBuilderServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

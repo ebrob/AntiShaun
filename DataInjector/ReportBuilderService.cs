@@ -17,11 +17,10 @@ namespace DataInjector
             _reconstructService = reconstructService;
         }
 
-        //Path is the path to the template file
-        public string DoStuff(string path, object model)
+        public string DoStuff(string pathToTemplate, object model)
         {
-            Ensure.That(path).IsNotNullOrWhiteSpace();
-            var templateContent = _deconstructService.UnzipAndGetContent(path);
+            Ensure.That(pathToTemplate).IsNotNullOrWhiteSpace();
+            var templateContent = _deconstructService.UnzipAndGetContent(pathToTemplate);
             
             var xmlContent = _templateService.ApplyTemplate(templateContent, model);
 

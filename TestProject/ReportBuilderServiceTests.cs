@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace TestProject
 {
     [TestFixture]
-    internal class ReportBuilderServiceTest
+    internal class ReportBuilderServiceTests
     {
         private ReportBuilderService _sut;
         private Mock<IDocumentReconstructService> _mockReconstruct;

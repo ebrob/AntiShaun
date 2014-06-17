@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataInjector
 {
-    internal interface IFileSystemService
+    public interface IFileSystemService
     {
         string TempFolderPath { get; }
         string UnzipAndGetContentPath(string pathToDocument);
