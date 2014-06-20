@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using Ionic.Zip;
 
@@ -12,16 +13,30 @@ namespace DataInjector
 
     public class DocumentReconstructService : IDocumentReconstructService
     {
+
+        private IFileSystem _fileSystem;
+        public DocumentReconstructService(IFileSystem fileSystem)
+        {
+            _fileSystem = fileSystem;
+        }
+
+
+
         public string Reconstruct(string tempFolderPath, string xmlContent)
         {
-            var contentPath = Path.Combine(tempFolderPath, "content.xml");
-            File.WriteAllText(contentPath, xmlContent);
+//TODO: Rewrite to remove dependency on file system: perform all actions in memory
+            var contentPath = _fileSystem.Path.Combine(tempFolderPath, "content.xml");
+            _fileSystem.File.WriteAllText(contentPath, xmlContent);
 
             var reportsFolderPath = tempFolderPath.Substring(0,
                                                              tempFolderPath.LastIndexOf("\\", StringComparison.Ordinal));
 
             var fileList = Directory.EnumerateFiles(tempFolderPath);
-            var reportPath = reportsFolderPath + "\\Report_1.odt";
+
+
+            var startPath = reportsFolderPath + "\\Report.odt";
+            var reportPath = FileSystemService.NextAvailableFilename(startPath);
+
             using (var output = new ZipOutputStream(reportPath))
             {
                 var enumerable = fileList as string[] ?? fileList.ToArray();
@@ -46,7 +61,6 @@ namespace DataInjector
                         WriteExistingFile(fs, output);
                     }
                 }
-                output.Flush();
                 output.Close();
             }
             using (var zippedFile = new ZipFile(reportPath))

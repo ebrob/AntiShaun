@@ -12,19 +12,19 @@ namespace DataInjector
 
     public class DocumentDeconstructService : IDisposable, IDocumentDeconstructService
     {
-        private readonly IFileSystemService _fileSystemService = new FileSystemService();
+        private readonly IFileSystemService _fileSystemService;
+
+        public DocumentDeconstructService(IFileSystemService fileSystemService)
+        {
+            _fileSystemService = fileSystemService;
+        }
+
 
         public string UnzipAndGetContent(string pathToDocument)
         {
             var contentPath = _fileSystemService.UnzipAndGetContentPath(pathToDocument);
             TempFolderPath = _fileSystemService.TempFolderPath;
-            string contentString; 
-            using (var content = new FileStream(contentPath, FileMode.Open))
-            {
-                var transformReader = new StreamReader(content);
-                contentString = transformReader.ReadToEnd();
-            }
-
+            var contentString = _fileSystemService.GetFileContentAsString(contentPath);
 
             return contentString;
         }

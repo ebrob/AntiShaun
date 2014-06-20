@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.XPath;
@@ -37,7 +36,8 @@ namespace DataInjector
         private string DetectAndConvertTemplateTags(Stream content)
         {
 //TODO: refactor for same level of abstraction
-            XDocument document = XDocument.Load(content);
+
+            var document = XDocument.Load(content);
 
             var table = new NameTable();
             var manager = new XmlNamespaceManager(table);
@@ -60,6 +60,8 @@ namespace DataInjector
             {
                 if (script.Value.Contains("foreach"))
                 {
+//Unsure how return values vs original document work. In short: passed by reference or value?
+                    CreateControlFlowSection(script, manager);
                 }
                 else if (script.Value.Contains("if"))
                 {
@@ -85,36 +87,42 @@ namespace DataInjector
         }
 
 
-        private XDocument InsertLoops(XElement script, XmlNamespaceManager manager)
+        private XDocument CreateControlFlowSection(XElement script, XmlNamespaceManager manager)
         {
 //TODO: Test this method
 
-            //TODO: fix the thing
-
-        
             var parentSection = script.XPathSelectElement("./ancestor::text:section", manager);
-            
+
             var scriptValue = script.Value.Replace("U+10FFFD", "@");
-            
+
             var beforeNode = new XText(scriptValue + "{");
-            
+
             var afterNode = new XText("}");
-            
+
             parentSection.AddBeforeSelf(beforeNode);
-        
+
             parentSection.AddAfterSelf(afterNode);
-        
+
             script.Remove();
             return script.Document;
         }
 
 
-        private
-            string RazorParseAndReinsertAtSigns(string template, object model)
+        private string RazorParseAndReinsertAtSigns(string template, object model)
         {
-            var razorOutput = Razor.Parse(template, model);
-            return razorOutput.Replace
-                ("U+10FFFD", "@");
+            string returnValue;
+            try
+            {
+                var razorOutput = Razor.Parse(template, model);
+                returnValue = razorOutput.Replace("U+10FFFD", "@");
+            }
+            catch (Exception)
+            {
+//TODO: Make all paths relative. Alternately, rewrite to extract into memory instead of files.
+                Directory.Delete("C:\\Users\\Calvin\\Documents\\TestingBed\\Generated Reports\\temp", true);
+                throw;
+            }
+            return returnValue;
         }
     }
 }

@@ -10,25 +10,19 @@ namespace TestProject
     [TestFixture]
     public class IntegrationTests
     {
-        private class Client : Object
-        {
-            public string FirstName;
-            public string Lastname;
-        }
-
         [Test]
         public void CorrectlyCompilesAndParsesBasicTemplate()
         {
-            var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
+            var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
                                                    new DocumentReconstructService());
-            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 1.odt",
+            builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 1.odt",
                             new {Date = DateTime.Now.Day, Name = "Fancypants McSnooterson"});
         }
 
         [Test]
         public void CorrectlyParsesTemplateWithForeachLoop()
         {
-            var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
+            var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
                                                    new DocumentReconstructService());
             dynamic model = new ExpandoObject();
 
@@ -43,25 +37,29 @@ namespace TestProject
             model.Clients = new List<dynamic>();
             model.Clients.Add(client1);
             model.Clients.Add(client2);
-            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 2.odt", model);
+            builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 2.odt", model);
         }
 
 
         [Test]
+        [ExpectedException]
         public void BreaksOnBadModel()
         {
-            var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
+            var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
                                                    new DocumentReconstructService());
-            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 3.odt",
+
+                            builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 3.odt",
                             new {});
+     
+
         }
 
         [Test]
         public void HandlesConditionals()
         {
-            var builder = new ReportBuilderService(new DocumentDeconstructService(), new ReportTemplateService(),
+            var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
                                                    new DocumentReconstructService());
-            builder.DoStuff("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 4.odt",
+            builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 4.odt",
                             new {Variable = 0, Var1 = "Var1"});
         }
     }

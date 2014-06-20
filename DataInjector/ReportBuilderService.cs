@@ -17,8 +17,8 @@ namespace DataInjector
             _reconstructService = reconstructService;
         }
 
-        public string DoStuff(string pathToTemplate, object model)
-        {
+        public string InjectData(string pathToTemplate, object model)
+        {//TODO: Refactor to pass zip archive through, so we don't need a temp folder.
             Ensure.That(pathToTemplate).IsNotNullOrWhiteSpace();
             var templateContent = _deconstructService.UnzipAndGetContent(pathToTemplate);
             

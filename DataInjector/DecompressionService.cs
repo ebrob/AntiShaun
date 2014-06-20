@@ -4,7 +4,13 @@ using ZipFile = Ionic.Zip.ZipFile;
 
 namespace DataInjector
 {
-    public class DecompressionService:IDisposable
+    public interface IDecompressionService
+    {
+        void UnzipToDirectory(string path, string targetfolder);
+        void Dispose();
+    }
+
+    public class DecompressionService:IDisposable, IDecompressionService
     {
         private ZipFile _file;
         public void UnzipToDirectory(string path, string targetfolder)
