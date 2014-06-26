@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO.Abstractions;
 using NUnit.Framework;
 using DataInjector;
 
@@ -14,16 +15,16 @@ namespace TestProject
         public void CorrectlyCompilesAndParsesBasicTemplate()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
-                                                   new DocumentReconstructService());
+                                                   new DocumentReconstructService(new FileSystem()));
             builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 1.odt",
-                            new {Date = DateTime.Now.Day, Name = "Fancypants McSnooterson"});
+                            new {Date = DateTime.Now.Day, DateTime.Now.Month, Name = "Fancypants McSnooterson"});
         }
 
         [Test]
         public void CorrectlyParsesTemplateWithForeachLoop()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
-                                                   new DocumentReconstructService());
+                                                   new DocumentReconstructService(new FileSystem()));
             dynamic model = new ExpandoObject();
 
             dynamic client1 = new ExpandoObject();
@@ -46,7 +47,7 @@ namespace TestProject
         public void BreaksOnBadModel()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
-                                                   new DocumentReconstructService());
+                                                   new DocumentReconstructService(new FileSystem()));
 
                             builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 3.odt",
                             new {});
@@ -58,7 +59,7 @@ namespace TestProject
         public void HandlesConditionals()
         {
             var builder = new ReportBuilderService(new DocumentDeconstructService(new FileSystemService(new DecompressionService())), new ReportTemplateService(),
-                                                   new DocumentReconstructService());
+                                                   new DocumentReconstructService(new FileSystem()));
             builder.InjectData("C:\\Users\\Calvin\\Documents\\TestingBed\\Test 4.odt",
                             new {Variable = 0, Var1 = "Var1"});
         }

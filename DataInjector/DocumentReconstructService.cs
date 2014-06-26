@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.IO.Abstractions;
+using System.IO;
 using System.Linq;
 using Ionic.Zip;
 
@@ -13,8 +13,8 @@ namespace DataInjector
 
     public class DocumentReconstructService : IDocumentReconstructService
     {
-
-        private IFileSystem _fileSystem;
+         
+        private readonly IFileSystem _fileSystem;
         public DocumentReconstructService(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
@@ -31,7 +31,7 @@ namespace DataInjector
             var reportsFolderPath = tempFolderPath.Substring(0,
                                                              tempFolderPath.LastIndexOf("\\", StringComparison.Ordinal));
 
-            var fileList = Directory.EnumerateFiles(tempFolderPath);
+            var fileList = _fileSystem.Directory.GetFiles(tempFolderPath);
 
 
             var startPath = reportsFolderPath + "\\Report.odt";
@@ -39,7 +39,7 @@ namespace DataInjector
 
             using (var output = new ZipOutputStream(reportPath))
             {
-                var enumerable = fileList as string[] ?? fileList.ToArray();
+                var enumerable = fileList;
                 foreach (var filepath in enumerable.Where(filepath => filepath.EndsWith("mimetype")))
                 {
                     using (var fs = new FileStream(filepath, FileMode.Open))

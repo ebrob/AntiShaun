@@ -111,7 +111,7 @@ namespace DataInjector
             return Path.HasExtension(path)
                        ? GetNextFilename(
                            path.Insert(
-                               path.LastIndexOf(Path.GetExtension(path), comparisonType: StringComparison.Ordinal),
+                               path.LastIndexOf(Path.GetExtension(path), StringComparison.Ordinal),
                                NumberPattern))
                        : GetNextFilename(path + NumberPattern);
 

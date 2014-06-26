@@ -35,8 +35,6 @@ namespace DataInjector
 
         private string DetectAndConvertTemplateTags(Stream content)
         {
-//TODO: refactor for same level of abstraction
-
             var document = XDocument.Load(content);
 
             var table = new NameTable();
@@ -60,7 +58,7 @@ namespace DataInjector
             {
                 if (script.Value.Contains("foreach"))
                 {
-//Unsure how return values vs original document work. In short: passed by reference or value?
+//HACK: Unsure how return values vs original document work. In short: passed by reference or value?
                     CreateControlFlowSection(script, manager);
                 }
                 else if (script.Value.Contains("if"))
@@ -87,7 +85,7 @@ namespace DataInjector
         }
 
 
-        private XDocument CreateControlFlowSection(XElement script, XmlNamespaceManager manager)
+        private void CreateControlFlowSection(XElement script, XmlNamespaceManager manager)
         {
 //TODO: Test this method
 
@@ -104,7 +102,6 @@ namespace DataInjector
             parentSection.AddAfterSelf(afterNode);
 
             script.Remove();
-            return script.Document;
         }
 
 
