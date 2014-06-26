@@ -63,6 +63,7 @@ namespace DataInjector
                 }
                 else if (script.Value.Contains("if"))
                 {
+                    CreateControlFlowSection(script, manager);
                 }
             }
             return document;
