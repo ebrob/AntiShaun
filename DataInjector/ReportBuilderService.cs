@@ -1,26 +1,29 @@
 ﻿using System.IO;
-using System.IO.Compression;
+using RazorEngine;
 
 namespace DataInjector
 {
     public class ReportBuilderService
     {
-        private readonly ReportTemplateService _reportTemplateService;
         private readonly IDataHandlerService _dataHandlerService;
 
-        public ReportBuilderService(ReportTemplateService reportTemplateService, IDataHandlerService dataHandlerService)
+        public ReportBuilderService(IDataHandlerService dataHandlerService)
         {
-            _reportTemplateService = reportTemplateService;
             _dataHandlerService = dataHandlerService;
         }
 
-        public void BuildReport(byte[] templateDocument, object model, Stream outputStream)
+
+        public void BuildReport(Template template, object model, Stream outputStream)
         {
             string reportXml;
 
-            using (var templateFileStream = _dataHandlerService.WrapBytesInStream(templateDocument))
-            {
+
+
+            using (var templateFileStream = _dataHandlerService.WrapBytesInStream(templateFile))
+              {
                 var zipFile = _dataHandlerService.ZipArchiveFromStream(templateFileStream);
+
+                var fileType = _dataHandlerService.GetFileType(zipFile);
 
                 var templateContentEntry = _dataHandlerService.GetZipEntry(zipFile, "content.xml");
 
@@ -28,11 +31,10 @@ namespace DataInjector
                 {
                     var templateContent = _dataHandlerService.ReadEntryStreamContentAsString(templateContentStream);
 
-                    reportXml = _reportTemplateService.ApplyTemplate(templateContent, model);
+                    reportXml = _xmlService.ApplyTemplate(templateContent, model, fileType);
                 }
             }
-            var reportDocument = _dataHandlerService.Clone(templateDocument);
-            //BUG: This document never changes! The document isn't being edited at all!
+            var reportDocument = _dataHandlerService.Clone(templateFile);
 
             using (var memoryStream = _dataHandlerService.WrapBytesInStream(reportDocument))
             {
@@ -54,7 +56,16 @@ namespace DataInjector
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 memoryStream.CopyTo(outputStream);
             }
-           
+        }
+
+
+        private string RazorParseAndReinsertAtSigns(string template, object model)
+        {
+            var razorOutput = Razor.Parse(template, model);
+            string returnValue = razorOutput.Replace("U+10FFFD", "@");
+
+
+            return returnValue;
         }
     }
 }

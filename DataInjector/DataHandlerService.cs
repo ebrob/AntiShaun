@@ -6,19 +6,57 @@ namespace DataInjector
 {
     public interface IDataHandlerService
     {
-        Stream WrapBytesInStream(byte[] buffer);
-        ZipArchive ZipArchiveFromStream(Stream stream);
-        ZipArchiveEntry GetZipEntry(ZipArchive archive, string entryName);
-        Stream OpenZipEntry(ZipArchiveEntry entry);
-        string ReadEntryStreamContentAsString(Stream entry);
-        Byte[] Clone(byte[] original);
+        DocumentInformation BuildDocumentInformation(byte[] document, Type type);
     }
 
     public class DataHandlerService : IDataHandlerService
     {
-        //TODO: Fluent interface?
+        public enum FileType
+        {
+            Unknown,
+            Odt,
+            Ods
+        }
 
-        public Stream WrapBytesInStream(byte[] buffer)
+        public DocumentInformation BuildDocumentInformation(byte[] document, Type type)
+        {
+            using (var stream = WrapBytesInStream(document))
+            {
+                using (var archive = ZipArchiveFromStream(stream))
+                {
+                    var fileType = GetFileType(archive);
+                    var content = GetEntryAsString(archive, "content.xml");
+                    var metadata = new OdfMetadata(archive.GetEntry("meta.xml"), type);
+                    var information = new DocumentInformation(fileType, document, content, metadata);
+
+                    return information;
+                }
+            }
+        }
+
+
+        public FileType GetFileType(ZipArchive file)
+        {
+            var mimetype = file.GetEntry("mimetype");
+            using (var stream = mimetype.Open())
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    var mimetypeIdentifier = reader.ReadToEnd();
+                    switch (mimetypeIdentifier)
+                    {
+                        case "application/vnd.oasis.opendocument.spreadsheet":
+                            return FileType.Ods;
+                        case "application/vnd.oasis.opendocument.text":
+                            return FileType.Odt;
+                    }
+                    throw new NotSupportedException(
+                        "Unknown or unexpected file type. Only ODT and ODS files are supported as input at this time.");
+                }
+            }
+        }
+
+        private Stream WrapBytesInStream(byte[] buffer)
         {
             var stream = new MemoryStream(buffer);
             return stream;
@@ -31,6 +69,17 @@ namespace DataInjector
             return archive;
         }
 
+        public String GetEntryAsString(ZipArchive archive, string entry)
+        {
+            var zipEntry = GetZipEntry(archive, entry);
+            using (var stream = zipEntry.Open())
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
 
         public ZipArchiveEntry GetZipEntry(ZipArchive archive, string entryName)
         {
@@ -48,7 +97,6 @@ namespace DataInjector
         {
             using (var reader = new StreamReader(entry))
             {
-                
                 string contentString = reader.ReadToEnd();
                 return contentString;
             }
