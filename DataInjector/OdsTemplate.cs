@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Xml;
+﻿using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using EnsureThat;
@@ -9,30 +7,31 @@ namespace DataInjector
 {
     internal class OdsTemplate : Template
     {
+
+
         public OdsTemplate(DocumentInformation documentInformation)
             : base(documentInformation)
         {
-            DocumentContent = HandleConditionals(DocumentContent, Manager);
-            DocumentContent = ReplaceComments(DocumentContent, Manager);
+            HandleConditionals();
+            ReplaceComments();
         }
 
-        private static XDocument HandleConditionals(XDocument document, XmlNamespaceManager manager)
+        private void HandleConditionals()
         {
             var targetComments =
-                document.XPathSelectElements(@"//text:span", manager).ToList();
+                DocumentContent.XPathSelectElements(@"//text:span", Manager).ToList();
 
             foreach (
                 var comment in
                     targetComments.Where(script => script.Value.Contains("foreach") || script.Value.Contains("if")))
             {
-                CreateControlFlowFromComment(comment, manager);
+                CreateControlFlowFromComment(comment);
             }
-            return document;
         }
 
-        private static void CreateControlFlowFromComment(XElement comment, XmlNamespaceManager manager)
+        private void CreateControlFlowFromComment(XElement comment)
         {
-            var row = comment.XPathSelectElement("./ancestor::table:table-row", manager);
+            var row = comment.XPathSelectElement("./ancestor::table:table-row", Manager);
             var commentValue = comment.Value.Replace("U+10FFFD", "@");
 
             var beforeNode = new XText(commentValue + "{");
@@ -45,12 +44,12 @@ namespace DataInjector
         }
 
 
-        private static XDocument ReplaceComments(XDocument document, XmlNamespaceManager manager)
+        private void ReplaceComments()
         {
-            var targetCells = document.XPathSelectElements(@"//office:annotation/..", manager).ToList();
+            var targetCells = DocumentContent.XPathSelectElements(@"//office:annotation/..", Manager).ToList();
             foreach (var cell in targetCells)
             {
-                var comment = cell.XPathSelectElement(@"./office:annotation/text:p", manager);
+                var comment = cell.XPathSelectElement(@"./office:annotation/text:p", Manager);
                 var preparedValue = comment.Value.Replace("U+10FFFD", "@");
                 var parent = comment.Parent;
                 Ensure.That(parent).IsNotNull();
@@ -60,7 +59,6 @@ namespace DataInjector
                 var content = new XElement(textNs + "p") {Value = preparedValue};
                 cell.Add(content);
             }
-            return document;
         }
     }
 }

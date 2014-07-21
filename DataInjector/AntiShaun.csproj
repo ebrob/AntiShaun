@@ -90,14 +90,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataHandlerService.cs" />
+    <Compile Include="OdfHandlerService.cs" />
     <Compile Include="DocumentInformation.cs" />
     <Compile Include="OdfMetadata.cs" />
     <Compile Include="OdsTemplate.cs" />
     <Compile Include="OdtTemplate.cs" />
+    <Compile Include="RazorTemplateCompileService.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="TemplateFactory.cs" />
-    <Compile Include="ReportBuilderService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateBuilderService.cs" />
   </ItemGroup>

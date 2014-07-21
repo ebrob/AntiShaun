@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Xml;
+﻿using System.Linq;
 using System.Xml.Linq;
-using System.Xml.XPath; 
+using System.Xml.XPath;
 
 
 namespace DataInjector
@@ -12,29 +10,28 @@ namespace DataInjector
         public OdtTemplate(DocumentInformation documentInformation)
             : base(documentInformation)
         {
-            DocumentContent = ScriptSectionFormatting(DocumentContent, Manager);
-            DocumentContent = ReplaceFields(DocumentContent, Manager);
+            ScriptSectionFormatting();
+            ReplaceFields();
         }
 
-        private static XDocument ScriptSectionFormatting(XDocument document, XmlNamespaceManager manager)
+        private void ScriptSectionFormatting()
         {
             var targetScripts =
-                document.XPathSelectElements(@"//text:script[@script:language = 'Template']", manager).ToList();
+                DocumentContent.XPathSelectElements(@"//text:script[@script:language = 'Template']", Manager).ToList();
 
             foreach (
                 var script in
                     targetScripts.Where(script => script.Value.Contains("foreach") || script.Value.Contains("if")))
             {
-                CreateControlFlowSection(script, manager);
+                CreateControlFlowSection(script);
             }
-            return document;
         }
 
-        private static void CreateControlFlowSection(XElement script, XmlNamespaceManager manager)
+        private void CreateControlFlowSection(XElement script)
         {
 //TODO: Test this method
 
-            var parentSection = script.XPathSelectElement("./ancestor::text:section", manager);
+            var parentSection = script.XPathSelectElement("./ancestor::text:section", Manager);
             // TODO: If ParentSection is null, throw specific exception
 
             var scriptValue = script.Value.Replace("U+10FFFD", "@");
@@ -50,10 +47,10 @@ namespace DataInjector
             script.Remove();
         }
 
-        private static XDocument ReplaceFields(XDocument document, XmlNamespaceManager manager)
+        private void ReplaceFields()
         {
-            var elements = document.XPathSelectElements(@"//text:text-input[ @text:description = 'Template']",
-                                                        manager);
+            var elements = DocumentContent.XPathSelectElements(@"//text:text-input[ @text:description = 'Template']",
+                                                               Manager);
             var nodes = elements.ToList();
             foreach (var element in nodes)
             {
@@ -62,7 +59,6 @@ namespace DataInjector
                 var text = new XText(preparedAttribute);
                 element.ReplaceWith(text);
             }
-            return document;
         }
     }
 }

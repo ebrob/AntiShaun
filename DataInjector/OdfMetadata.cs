@@ -1,21 +1,29 @@
 ﻿using System;
-using System.IO.Compression;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace DataInjector
 {
     public class OdfMetadata
     {
-        private ZipArchiveEntry _entry;
         private readonly Type _type;
+
         public Type Type
         {
             get { return _type; }
         }
 
-        public OdfMetadata(ZipArchiveEntry entry, Type type)
+
+        public OdfMetadata(string metaXml)
         {
-            _entry = entry;
-            _type = type;
+            var document = XDocument.Load(metaXml);
+            var modelTypeNameElement =
+                document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]/.");
+
+            var modelTypeName = modelTypeNameElement.Value;
+
+            _type = Type.GetType(modelTypeName);
+
         }
     }
 }

@@ -2,16 +2,21 @@
 
 namespace DataInjector
 {
-    public class TemplateFactory
+    public interface ITemplateFactory
+    {
+        Template GenerateTemplate(DocumentInformation documentInformation);
+    }
+
+    public class TemplateFactory : ITemplateFactory
     {
         public Template GenerateTemplate(DocumentInformation documentInformation)
         {
             switch (documentInformation.FileType)
             {
-                case DataHandlerService.FileType.Ods:
+                case OdfHandlerService.FileType.Ods:
                     return new OdsTemplate(documentInformation);
 
-                case DataHandlerService.FileType.Odt:
+                case OdfHandlerService.FileType.Odt:
                     return new OdtTemplate(documentInformation);
             }
 

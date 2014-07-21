@@ -8,17 +8,16 @@ namespace DataInjector
     {
         public byte[] OriginalDocument { get; private set; }
         public OdfMetadata Meta { get; private set; }
-        public Type ModelType { get; private set; }
         protected XmlNamespaceManager Manager;
         protected XDocument DocumentContent;
         protected OdfMetadata Metadata;
+        public string CachedTemplateIdentifier { get; set; }
+    
 
         protected Template(DocumentInformation documentInformation)
         {
             OriginalDocument = documentInformation.Document;
             Meta = documentInformation.Metadata;
-            ModelType = Meta.Type;
-
             ConvertDocument(documentInformation.Content);
             CreateNamespaceManager();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Xml;
 
 namespace DataInjector
 {
@@ -9,13 +10,26 @@ namespace DataInjector
         DocumentInformation BuildDocumentInformation(byte[] document, Type type);
     }
 
-    public class DataHandlerService : IDataHandlerService
+    public class OdfHandlerService : IDataHandlerService
     {
         public enum FileType
         {
             Unknown,
             Odt,
             Ods
+        }
+
+        private readonly XmlNamespaceManager _manager;
+
+        public OdfHandlerService()
+        {
+            var table = new NameTable();
+            _manager = new XmlNamespaceManager(table);
+            _manager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+            _manager.AddNamespace("script", "urn:oasis:names:tc:opendocument:xmlns:script:1.0");
+            _manager.AddNamespace("office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+            _manager.AddNamespace("table", "urn:oasis:names:tc:opendocument:xmlns:table:1.0");
+            _manager.AddNamespace("meta", "urn:oasis:names:tc:opendocument:xmlns:meta:1.0");
         }
 
         public DocumentInformation BuildDocumentInformation(byte[] document, Type type)
@@ -26,7 +40,11 @@ namespace DataInjector
                 {
                     var fileType = GetFileType(archive);
                     var content = GetEntryAsString(archive, "content.xml");
-                    var metadata = new OdfMetadata(archive.GetEntry("meta.xml"), type);
+
+                    var metaXml = GetEntryAsString(archive, "meta.xml");
+                    var metadata = new OdfMetadata(metaXml);
+
+                  
                     var information = new DocumentInformation(fileType, document, content, metadata);
 
                     return information;
@@ -62,14 +80,14 @@ namespace DataInjector
             return stream;
         }
 
-        public ZipArchive ZipArchiveFromStream(Stream stream)
+        private ZipArchive ZipArchiveFromStream(Stream stream, ZipArchiveMode mode = ZipArchiveMode.Read)
         {
-            var archive = new ZipArchive(stream, ZipArchiveMode.Update, true);
+            var archive = new ZipArchive(stream, mode, true);
 
             return archive;
         }
 
-        public String GetEntryAsString(ZipArchive archive, string entry)
+        private String GetEntryAsString(ZipArchive archive, string entry)
         {
             var zipEntry = GetZipEntry(archive, entry);
             using (var stream = zipEntry.Open())
@@ -81,32 +99,10 @@ namespace DataInjector
             }
         }
 
-        public ZipArchiveEntry GetZipEntry(ZipArchive archive, string entryName)
+        private ZipArchiveEntry GetZipEntry(ZipArchive archive, string entryName)
         {
             var entry = archive.GetEntry(entryName);
             return entry;
-        }
-
-        public Stream OpenZipEntry(ZipArchiveEntry entry)
-        {
-            var stream = entry.Open();
-            return stream;
-        }
-
-        public string ReadEntryStreamContentAsString(Stream entry)
-        {
-            using (var reader = new StreamReader(entry))
-            {
-                string contentString = reader.ReadToEnd();
-                return contentString;
-            }
-        }
-
-        public Byte[] Clone(byte[] original)
-        {
-            var newByteArray = new byte[original.Length];
-            Buffer.BlockCopy(original, 0, newByteArray, 0, Buffer.ByteLength(original));
-            return newByteArray;
         }
     }
 }
