@@ -95,7 +95,7 @@
     <Compile Include="OdfMetadata.cs" />
     <Compile Include="OdsTemplate.cs" />
     <Compile Include="OdtTemplate.cs" />
-    <Compile Include="RazorTemplateCompileService.cs" />
+    <Compile Include="CompileService.cs" />
     <Compile Include="ReportGeneratorService.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="TemplateFactory.cs" />

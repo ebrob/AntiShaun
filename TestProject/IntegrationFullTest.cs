@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataInjector;
+using AntiShaun;
 using NUnit.Framework;
 
 namespace TestProject
@@ -22,9 +22,9 @@ namespace TestProject
             var templateService = new TemplateBuilderService(new TemplateFactory(), new OdfHandlerService());
             var document = File.ReadAllBytes(@"..\..\Test Templates\Modeled Basic Template.odt");
 
-            var template = templateService.BuildTemplate(document, typeof (BasicModel));
+            var template = templateService.BuildTemplate(document);
 
-            var compileService = new RazorTemplateCompileService();
+            var compileService = new CompileService();
             compileService.Compile(template, "Template 1");
 
             var reportService = new ReportGeneratorService(new OdfHandlerService());

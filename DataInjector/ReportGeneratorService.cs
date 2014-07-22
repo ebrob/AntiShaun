@@ -2,7 +2,7 @@
 using System.IO.Compression;
 using RazorEngine;
 
-namespace DataInjector //TODO: Refactor
+namespace AntiShaun //TODO: Refactor
 {
     public class ReportGeneratorService
     {

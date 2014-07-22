@@ -3,11 +3,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Xml;
 
-namespace DataInjector
+namespace AntiShaun
 {
     public interface IOdfHandlerService
     {
-        DocumentInformation BuildDocumentInformation(byte[] document, Type type);
+        DocumentInformation BuildDocumentInformation(byte[] document);
         ZipArchive ZipArchiveFromStream(Stream stream, ZipArchiveMode mode = ZipArchiveMode.Read);
     }
 
@@ -33,7 +33,7 @@ namespace DataInjector
             _manager.AddNamespace("meta", "urn:oasis:names:tc:opendocument:xmlns:meta:1.0");
         }
 
-        public DocumentInformation BuildDocumentInformation(byte[] document, Type type)
+        public DocumentInformation BuildDocumentInformation(byte[] document)
         {
             using (var stream = WrapBytesInStream(document))
             {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataInjector
+﻿namespace AntiShaun
 {
     public class TemplateBuilderService
     {
@@ -13,9 +11,9 @@ namespace DataInjector
             _odfHandlerService = odfHandlerService;
         }
 
-        public Template BuildTemplate(byte[] document, Type modelType)
+        public Template BuildTemplate(byte[] document)
         {
-            var documentInformation = _odfHandlerService.BuildDocumentInformation(document, modelType);
+            var documentInformation = _odfHandlerService.BuildDocumentInformation(document);
             var template = _templateFactory.GenerateTemplate(documentInformation);
             return template;
         }

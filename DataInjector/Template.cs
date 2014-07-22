@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Linq;
 
-namespace DataInjector
+namespace AntiShaun
 {
     public abstract class Template
     {

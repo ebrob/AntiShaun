@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataInjector
+namespace AntiShaun
 {
     public interface ITemplateFactory
     {

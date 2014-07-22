@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace DataInjector
+namespace AntiShaun
 {
     public class OdfMetadata
     {
@@ -19,7 +19,7 @@ namespace DataInjector
         {
             var document = XDocument.Parse(metaXml);
              var modelTypeNameElement =
-                document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]/.", manager);
+                document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]", manager);
 
             var modelTypeName = modelTypeNameElement.Value;
 

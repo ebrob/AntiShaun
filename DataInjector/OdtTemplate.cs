@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 
 
-namespace DataInjector
+namespace AntiShaun
 {
     internal class OdtTemplate : Template
     {
