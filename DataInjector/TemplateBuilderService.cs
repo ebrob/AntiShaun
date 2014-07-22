@@ -2,20 +2,20 @@
 
 namespace DataInjector
 {
-    internal class TemplateBuilderService
+    public class TemplateBuilderService
     {
         private readonly ITemplateFactory _templateFactory;
-        private readonly IDataHandlerService _dataHandlerService;
+        private readonly IOdfHandlerService _odfHandlerService;
 
-        public TemplateBuilderService(ITemplateFactory templateFactory, IDataHandlerService dataHandlerService)
+        public TemplateBuilderService(ITemplateFactory templateFactory, IOdfHandlerService odfHandlerService)
         {
             _templateFactory = templateFactory;
-            _dataHandlerService = dataHandlerService;
+            _odfHandlerService = odfHandlerService;
         }
 
         public Template BuildTemplate(byte[] document, Type modelType)
         {
-            var documentInformation = _dataHandlerService.BuildDocumentInformation(document, modelType);
+            var documentInformation = _odfHandlerService.BuildDocumentInformation(document, modelType);
             var template = _templateFactory.GenerateTemplate(documentInformation);
             return template;
         }

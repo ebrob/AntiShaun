@@ -96,6 +96,7 @@
     <Compile Include="OdsTemplate.cs" />
     <Compile Include="OdtTemplate.cs" />
     <Compile Include="RazorTemplateCompileService.cs" />
+    <Compile Include="ReportGeneratorService.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="TemplateFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

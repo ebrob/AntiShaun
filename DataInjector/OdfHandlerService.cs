@@ -5,12 +5,13 @@ using System.Xml;
 
 namespace DataInjector
 {
-    public interface IDataHandlerService
+    public interface IOdfHandlerService
     {
         DocumentInformation BuildDocumentInformation(byte[] document, Type type);
+        ZipArchive ZipArchiveFromStream(Stream stream, ZipArchiveMode mode = ZipArchiveMode.Read);
     }
 
-    public class OdfHandlerService : IDataHandlerService
+    public class OdfHandlerService : IOdfHandlerService
     {
         public enum FileType
         {
@@ -42,9 +43,9 @@ namespace DataInjector
                     var content = GetEntryAsString(archive, "content.xml");
 
                     var metaXml = GetEntryAsString(archive, "meta.xml");
-                    var metadata = new OdfMetadata(metaXml);
+                    var metadata = new OdfMetadata(metaXml, _manager);
 
-                  
+
                     var information = new DocumentInformation(fileType, document, content, metadata);
 
                     return information;
@@ -53,7 +54,7 @@ namespace DataInjector
         }
 
 
-        public FileType GetFileType(ZipArchive file)
+        private FileType GetFileType(ZipArchive file)
         {
             var mimetype = file.GetEntry("mimetype");
             using (var stream = mimetype.Open())
@@ -80,7 +81,7 @@ namespace DataInjector
             return stream;
         }
 
-        private ZipArchive ZipArchiveFromStream(Stream stream, ZipArchiveMode mode = ZipArchiveMode.Read)
+        public ZipArchive ZipArchiveFromStream(Stream stream, ZipArchiveMode mode = ZipArchiveMode.Read)
         {
             var archive = new ZipArchive(stream, mode, true);
 

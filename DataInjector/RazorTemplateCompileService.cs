@@ -12,7 +12,5 @@ namespace DataInjector
             Razor.Compile(template.Content, cacheName);
             template.CachedTemplateIdentifier = cacheName;
         }
-
-      
     }
-}
+}  

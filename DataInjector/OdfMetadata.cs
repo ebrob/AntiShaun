@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -14,11 +15,11 @@ namespace DataInjector
         }
 
 
-        public OdfMetadata(string metaXml)
+        public OdfMetadata(string metaXml, XmlNamespaceManager manager)
         {
-            var document = XDocument.Load(metaXml);
-            var modelTypeNameElement =
-                document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]/.");
+            var document = XDocument.Parse(metaXml);
+             var modelTypeNameElement =
+                document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]/.", manager);
 
             var modelTypeName = modelTypeNameElement.Value;
 
