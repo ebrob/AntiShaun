@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace TestProject
 {
-    class BasicModel
+    public class BasicModel
     {
         public string Name;
     }

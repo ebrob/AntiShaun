@@ -109,7 +109,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataInjector\AntiShaun.csproj">
+    <ProjectReference Include="..\AntiShaun\AntiShaun.csproj">
       <Project>{d7d53133-9423-4045-951f-066a2ad50124}</Project>
       <Name>AntiShaun</Name>
     </ProjectReference>

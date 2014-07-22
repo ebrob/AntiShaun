@@ -16,7 +16,7 @@ namespace AntiShaun //TODO: Refactor
 
         public void BuildReport(Template template, object model, Stream outputStream)
         {
-            outputStream.ReadAsync(template.OriginalDocument, 0, template.OriginalDocument.Length);
+            outputStream.Write(template.OriginalDocument, 0, template.OriginalDocument.Length);
             var archive = _odfHandlerService.ZipArchiveFromStream(outputStream, ZipArchiveMode.Update);
             var reportText = Razor.Run(template.CachedTemplateIdentifier, model);
             reportText = reportText.Replace("U+10FFFD", "@");
@@ -28,7 +28,7 @@ namespace AntiShaun //TODO: Refactor
             {
                 using (var writer = new StreamWriter(contentStream))
                 {
-                    writer.WriteAsync(reportText);
+                    writer.Write(reportText);
                 }
             }
         }

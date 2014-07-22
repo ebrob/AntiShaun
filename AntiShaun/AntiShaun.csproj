@@ -7,8 +7,8 @@
     <ProjectGuid>{D7D53133-9423-4045-951F-066A2AD50124}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataInjector</RootNamespace>
-    <AssemblyName>DataInjector</AssemblyName>
+    <RootNamespace>AntiShaun</RootNamespace>
+    <AssemblyName>AntiShaun</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -90,12 +90,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompileService.cs" />
     <Compile Include="OdfHandlerService.cs" />
     <Compile Include="DocumentInformation.cs" />
     <Compile Include="OdfMetadata.cs" />
     <Compile Include="OdsTemplate.cs" />
     <Compile Include="OdtTemplate.cs" />
-    <Compile Include="CompileService.cs" />
     <Compile Include="ReportGeneratorService.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="TemplateFactory.cs" />

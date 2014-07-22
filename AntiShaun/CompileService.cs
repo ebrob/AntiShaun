@@ -1,9 +1,7 @@
 ﻿using System;
 using RazorEngine;
 
-// ReSharper disable CheckNamespace
 namespace AntiShaun
-// ReSharper restore CheckNamespace
 {
 
 
