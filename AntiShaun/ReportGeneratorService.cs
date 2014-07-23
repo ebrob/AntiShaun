@@ -16,20 +16,25 @@ namespace AntiShaun //TODO: Refactor
 
         public void BuildReport(Template template, object model, Stream outputStream)
         {
-            outputStream.Write(template.OriginalDocument, 0, template.OriginalDocument.Length);
-            var archive = _odfHandlerService.ZipArchiveFromStream(outputStream, ZipArchiveMode.Update);
-            var reportText = Razor.Run(template.CachedTemplateIdentifier, model);
-            reportText = reportText.Replace("U+10FFFD", "@");
-            var meta = archive.GetEntry("meta.xml"); //TODO: Craft meta.xml? Or modify existing?
-            var content = archive.GetEntry("content.xml");
-            content.Delete();
-            content = archive.CreateEntry("content.xml");
-            using (var contentStream = content.Open())
+            using (var interimStream = new MemoryStream())
             {
-                using (var writer = new StreamWriter(contentStream))
+                interimStream.Write(template.OriginalDocument, 0, template.OriginalDocument.Length);
+                var archive = _odfHandlerService.ZipArchiveFromStream(interimStream, ZipArchiveMode.Update);
+                var reportText = Razor.Run(template.CachedTemplateIdentifier, model);
+                reportText = reportText.Replace("U+10FFFD", "@");
+                var meta = archive.GetEntry("meta.xml"); //TODO: Craft meta.xml? Or modify existing?
+                var content = archive.GetEntry("content.xml");
+                content.Delete();
+                content = archive.CreateEntry("content.xml");
+                using (var contentStream = content.Open())
                 {
-                    writer.Write(reportText);
+                    using (var writer = new StreamWriter(contentStream))
+                    {
+                        writer.Write(reportText);
+                    }
                 }
+
+                interimStream.CopyTo(outputStream);
             }
         }
     }
