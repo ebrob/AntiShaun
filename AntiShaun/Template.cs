@@ -4,49 +4,57 @@ using System.Xml.Linq;
 
 namespace AntiShaun
 {
-    public abstract class Template
-    {
-        public byte[] OriginalDocument { get; private set; }
-        public OdfMetadata Meta { get; private set; }
-        protected XmlNamespaceManager Manager;
-        protected XDocument DocumentContent;
-        protected OdfMetadata Metadata;
-        public string CachedTemplateIdentifier { get; set; }
-    
+	public interface ITemplate
+	{
+		byte[] OriginalDocument { get; }
+		OdfMetadata Meta { get; }
+		string CachedTemplateIdentifier { get; set; }
+		string Content { get; }
+	}
 
-        protected Template(DocumentInformation documentInformation)
-        {
-            OriginalDocument = documentInformation.Document;
-            Meta = documentInformation.Metadata;
-            ConvertDocument(documentInformation.Content);
-            CreateNamespaceManager();
-        }
+	public abstract class Template : ITemplate
+	{
+		public byte[] OriginalDocument { get; private set; }
+		public OdfMetadata Meta { get; private set; }
+		protected XmlNamespaceManager Manager;
+		protected XDocument DocumentContent;
+		protected OdfMetadata Metadata;
+		public string CachedTemplateIdentifier { get; set; }
 
-        public string Content
-        {
-            get { return DocumentContent.ToString(); }
-        }
 
-        private void ConvertDocument(string originalContent)
-        {
-            var content = EncodeAtSigns(originalContent);
-            DocumentContent = XDocument.Parse(content);
-        }
+		protected Template(DocumentInformation documentInformation)
+		{
+			OriginalDocument = documentInformation.Document;
+			Meta = documentInformation.Metadata;
+			ConvertDocument(documentInformation.Content);
+			CreateNamespaceManager();
+		}
 
-        private void CreateNamespaceManager()
-        {
-            var table = new NameTable();
-            Manager = new XmlNamespaceManager(table);
-            Manager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
-            Manager.AddNamespace("script", "urn:oasis:names:tc:opendocument:xmlns:script:1.0");
-            Manager.AddNamespace("office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
-            Manager.AddNamespace("table", "urn:oasis:names:tc:opendocument:xmlns:table:1.0");
-        }
+		public string Content
+		{
+			get { return DocumentContent.ToString(); }
+		}
 
-        private static String EncodeAtSigns(String content)
-        {
-            var preparedContent = content.Replace("@", "U+10FFFD");
-            return preparedContent;
-        }
-    }
+		private void ConvertDocument(string originalContent)
+		{
+			var content = EncodeAtSigns(originalContent);
+			DocumentContent = XDocument.Parse(content);
+		}
+
+		private void CreateNamespaceManager()
+		{
+			var table = new NameTable();
+			Manager = new XmlNamespaceManager(table);
+			Manager.AddNamespace("text", "urn:oasis:names:tc:opendocument:xmlns:text:1.0");
+			Manager.AddNamespace("script", "urn:oasis:names:tc:opendocument:xmlns:script:1.0");
+			Manager.AddNamespace("office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+			Manager.AddNamespace("table", "urn:oasis:names:tc:opendocument:xmlns:table:1.0");
+		}
+
+		private static String EncodeAtSigns(String content)
+		{
+			var preparedContent = content.Replace("@", "U+10FFFD");
+			return preparedContent;
+		}
+	}
 }
