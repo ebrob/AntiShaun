@@ -1,32 +1,33 @@
-﻿using System;
+﻿#region
+
 using System.IO;
 using System.IO.Compression;
 using RazorEngine;
+
+#endregion
 
 namespace AntiShaun //TODO: Refactor
 {
 	public class ReportGeneratorService
 	{
-		private readonly OdfHandlerService _odfHandlerService;
+		private readonly IFileHandlerService _fileHandlerService;
 
-		public ReportGeneratorService(OdfHandlerService odfHandlerService)
+		public ReportGeneratorService(IFileHandlerService fileHandlerService)
 		{
-			_odfHandlerService = odfHandlerService;
+			_fileHandlerService = fileHandlerService;
 		}
 
 
 		public void BuildReport(Template template, object model, Stream outputStream)
 		{
-			var newByteArray = new byte[template.OriginalDocument.Length];
-			Buffer.BlockCopy(template.OriginalDocument, 0, newByteArray, 0, Buffer.ByteLength(template.OriginalDocument));
+			var newByteArray = _fileHandlerService.Copy(template.OriginalDocument);
 			using (var interimStream = new MemoryStream(newByteArray))
 			{
-				//interimStream.Write(template.OriginalDocument, 0, template.OriginalDocument.Length);
-				using (var archive = _odfHandlerService.ZipArchiveFromStream(interimStream, ZipArchiveMode.Update))
+				using (var archive = _fileHandlerService.ZipArchiveFromStream(interimStream, ZipArchiveMode.Update))
 				{
 					var reportText = Razor.Run(template.CachedTemplateIdentifier, model);
 					reportText = reportText.Replace("U+10FFFD", "@");
-					var meta = archive.GetEntry("meta.xml"); //TODO: Craft meta.xml? Or modify existing?
+					//TODO: Craft meta.xml? Or modify existing?
 					var content = archive.GetEntry("content.xml");
 					content.Delete();
 					content = archive.CreateEntry("content.xml");

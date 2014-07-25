@@ -109,8 +109,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CompileServiceTests.cs" />
     <Compile Include="IntegrationFullTest.cs" />
+    <Compile Include="OdfHandlerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

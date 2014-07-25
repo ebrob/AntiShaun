@@ -1,25 +1,26 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Xml;
 using System.Xml.Linq;
+
+#endregion
 
 namespace AntiShaun
 {
 	public interface ITemplate
 	{
 		byte[] OriginalDocument { get; }
-		OdfMetadata Meta { get; }
+		IOdfMetadata Meta { get; }
 		string CachedTemplateIdentifier { get; set; }
 		string Content { get; }
 	}
 
 	public abstract class Template : ITemplate
 	{
-		public byte[] OriginalDocument { get; private set; }
-		public OdfMetadata Meta { get; private set; }
-		protected XmlNamespaceManager Manager;
 		protected XDocument DocumentContent;
+		protected XmlNamespaceManager Manager;
 		protected OdfMetadata Metadata;
-		public string CachedTemplateIdentifier { get; set; }
 
 
 		protected Template(DocumentInformation documentInformation)
@@ -30,7 +31,11 @@ namespace AntiShaun
 			CreateNamespaceManager();
 		}
 
-		public string Content
+		public byte[] OriginalDocument { get; private set; }
+		public IOdfMetadata Meta { get; private set; }
+		public string CachedTemplateIdentifier { get; set; }
+
+		public virtual string Content
 		{
 			get { return DocumentContent.ToString(); }
 		}
