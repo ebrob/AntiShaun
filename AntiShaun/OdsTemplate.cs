@@ -1,14 +1,18 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using EnsureThat;
+
+#endregion
 
 namespace AntiShaun
 {
 	internal class OdsTemplate : Template
 	{
-		public OdsTemplate(DocumentInformation documentInformation)
-			: base(documentInformation)
+		public OdsTemplate(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService)
+			: base(documentInformation, xmlNamespaceService)
 		{
 			HandleConditionals();
 			ReplaceComments();

@@ -1,14 +1,17 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
+#endregion
 
 namespace AntiShaun
 {
 	internal class OdtTemplate : Template
 	{
-		public OdtTemplate(DocumentInformation documentInformation)
-			: base(documentInformation)
+		public OdtTemplate(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService)
+			: base(documentInformation, xmlNamespaceService)
 		{
 			ScriptSectionFormatting();
 			ReplaceFields();

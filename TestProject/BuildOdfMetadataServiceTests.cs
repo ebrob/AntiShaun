@@ -1,0 +1,7 @@
+﻿namespace TestProject
+{
+	class BuildOdfMetadataServiceTests
+	{
+
+	}
+}

@@ -1,33 +1,20 @@
 ﻿#region
+
 using System;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
 
 #endregion
 
 namespace AntiShaun
 {
-	public interface IOdfMetadata
-	{
-		Type Type { get; }
-	}
-
-	public class OdfMetadata : IOdfMetadata
+	public class OdfMetadata
 	{
 		private readonly Type _type;
 
-
-		public OdfMetadata(string metaXml, XmlNamespaceManager manager)
+		public OdfMetadata(Type type)
 		{
-			var document = XDocument.Parse(metaXml);
-			var modelTypeNameElement =
-				document.XPathSelectElement(@"//meta:user-defined[ @meta:name = 'ModelType' ]", manager);
-
-			var modelTypeName = modelTypeNameElement.Value;
-
-			_type = Type.GetType(modelTypeName);
+			_type = type;
 		}
+
 
 		public virtual Type Type
 		{

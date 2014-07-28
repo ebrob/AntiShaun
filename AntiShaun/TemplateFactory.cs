@@ -1,23 +1,27 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace AntiShaun
 {
 	public interface ITemplateFactory
 	{
-		Template GenerateTemplate(DocumentInformation documentInformation);
+		Template GenerateTemplate(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService);
 	}
 
 	public class TemplateFactory : ITemplateFactory
 	{
-		public Template GenerateTemplate(DocumentInformation documentInformation)
+		public Template GenerateTemplate(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService)
 		{
 			switch (documentInformation.FileType)
 			{
 				case OdfHandlerService.FileType.Ods:
-					return new OdsTemplate(documentInformation);
+					return new OdsTemplate(documentInformation, xmlNamespaceService);
 
 				case OdfHandlerService.FileType.Odt:
-					return new OdtTemplate(documentInformation);
+					return new OdtTemplate(documentInformation, xmlNamespaceService);
 			}
 
 			throw new NotSupportedException(

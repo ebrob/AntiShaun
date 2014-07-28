@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿#region
+
+using System.IO;
 using AntiShaun;
 using NUnit.Framework;
 using ZipDiff.Core;
+
+#endregion
 
 namespace TestProject
 {
@@ -18,7 +22,11 @@ namespace TestProject
 			const string templatePath = @"..\..\Test Templates\Modeled Basic Template.odt";
 			const string reportPath = @"..\..\Generated Reports\Very Basic Report.odt";
 			const string expectedReportPath = @"..\..\Expected Report Outputs\Very Basic Report.odt";
-			var templateService = new TemplateBuilderService(new TemplateFactory(), new OdfHandlerService(new FileHandlerService(),new ZipHandlerService()));
+			var templateService = new TemplateBuilderService(new TemplateFactory(),
+			                                                 new OdfHandlerService(new FileHandlerService(),
+			                                                                       new ZipHandlerService(),
+			                                                                       new BuildOdfMetadataService(),new XmlNamespaceService()),new XmlNamespaceService());
+				//Use Ninject?
 			var document = File.ReadAllBytes(templatePath);
 
 			var template = templateService.BuildTemplate(document);
@@ -35,7 +43,6 @@ namespace TestProject
 			var thereAreDifferences = diffs.HasDifferences();
 			Assert.That(!thereAreDifferences);
 		}
-
 
 		private static Differences GetDifferences(string path1, string path2)
 		{
