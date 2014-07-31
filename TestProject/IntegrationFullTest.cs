@@ -26,7 +26,6 @@ namespace TestProject
 			                                                 new OdfHandlerService(new FileHandlerService(),
 			                                                                       new ZipHandlerService(),
 			                                                                       new BuildOdfMetadataService(),new XmlNamespaceService(), new IxDocumentParserServiceService()),new XmlNamespaceService());
-				//This constructor is terrifying.
 			var document = File.ReadAllBytes(templatePath);
 
 			var template = templateService.BuildTemplate(document);
