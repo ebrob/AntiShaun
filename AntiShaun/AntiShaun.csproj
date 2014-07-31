@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="CompileService.cs" />
     <Compile Include="FileHandlerService.cs" />
+    <Compile Include="IXDocumentParserService.cs" />
     <Compile Include="IZipArchive.cs" />
     <Compile Include="IZipEntry.cs" />
     <Compile Include="OdfHandlerService.cs" />

@@ -10,7 +10,6 @@ namespace AntiShaun
 {
 	public interface ITemplate
 	{
-		byte[] OriginalDocument { get; }
 		OdfMetadata Meta { get; }
 		string CachedTemplateIdentifier { get; set; }
 		string Content { get; }
@@ -19,9 +18,7 @@ namespace AntiShaun
 	public abstract class Template : ITemplate
 	{
 		protected XDocument DocumentContent;
-		protected IXmlNamespaceResolver Manager;
-		protected OdfMetadata Metadata;
-
+		protected readonly IXmlNamespaceResolver Manager;
 
 		protected Template(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService)
 		{

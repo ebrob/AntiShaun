@@ -5,11 +5,10 @@
 		DocumentInformation BuildDocumentInformation(byte[] document);
 	}
 
-	public class OdfHandlerService : IOdfHandlerService //TODO: Separate concerns?
+	public class OdfHandlerService : IOdfHandlerService
 	{
 		public enum FileType
 		{
-			Unknown,
 			Odt,
 			Ods
 		}
@@ -19,14 +18,16 @@
 		private readonly IFileHandlerService _fileHandlerService;
 		private readonly IXmlNamespaceService _manager;
 		private readonly IZipHandlerService _zipHandlerService;
+		private readonly IXDocumentParserService _ixDocumentParserService;
 
 		public OdfHandlerService(IFileHandlerService fileHandlerService, IZipHandlerService zipHandlerService,
-		                         IBuildOdfMetadataService buildOdfMetadataService, IXmlNamespaceService xmlNamespaceService)
+		                         IBuildOdfMetadataService buildOdfMetadataService, IXmlNamespaceService xmlNamespaceService, IXDocumentParserService ixDocumentParserService)
 		{
 			_fileHandlerService = fileHandlerService;
 			_zipHandlerService = zipHandlerService;
 			_buildOdfMetadataService = buildOdfMetadataService;
 			_manager = xmlNamespaceService;
+			_ixDocumentParserService = ixDocumentParserService;
 		}
 
 		public virtual DocumentInformation BuildDocumentInformation(byte[] document)
@@ -37,7 +38,7 @@
 				var content = _zipHandlerService.GetEntryAsString(archive, "content.xml");
 				var metaXml = _zipHandlerService.GetEntryAsString(archive, "meta.xml");
 
-				var metadata = _buildOdfMetadataService.BuildOdfMetadata(metaXml, _manager);
+				var metadata = _buildOdfMetadataService.BuildOdfMetadata(metaXml, _manager, _ixDocumentParserService);
 
 				var information = new DocumentInformation(fileType, document, content, metadata);
 

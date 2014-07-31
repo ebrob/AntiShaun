@@ -16,9 +16,9 @@ namespace AntiShaun
 			Metadata = metadata;
 		}
 
-		public OdfHandlerService.FileType FileType { get; set; }
-		public Byte[] Document { get; set; }
-		public String Content { get; set; }
-		public OdfMetadata Metadata { get; set; }
+		public OdfHandlerService.FileType FileType { get; private set; }
+		public Byte[] Document { get; private set; }
+		public String Content { get; private set; }
+		public OdfMetadata Metadata { get; private set; }
 	}
 }

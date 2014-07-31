@@ -25,8 +25,8 @@ namespace TestProject
 			var templateService = new TemplateBuilderService(new TemplateFactory(),
 			                                                 new OdfHandlerService(new FileHandlerService(),
 			                                                                       new ZipHandlerService(),
-			                                                                       new BuildOdfMetadataService(),new XmlNamespaceService()),new XmlNamespaceService());
-				//Use Ninject?
+			                                                                       new BuildOdfMetadataService(),new XmlNamespaceService(), new IxDocumentParserServiceService()),new XmlNamespaceService());
+				//This constructor is terrifying.
 			var document = File.ReadAllBytes(templatePath);
 
 			var template = templateService.BuildTemplate(document);

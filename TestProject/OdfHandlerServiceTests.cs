@@ -16,12 +16,13 @@ namespace TestProject
 		private const string XmlMetadata = "Xml Metadata";
 		private static readonly Mock<IFileHandlerService> Mock = new Mock<IFileHandlerService>();
 		private static readonly Mock<IZipHandlerService> MockZipHandler = new Mock<IZipHandlerService>();
-		private static readonly Mock<IBuildOdfMetadataService> MetadataService = new Mock<IBuildOdfMetadataService>();
-		private static readonly Mock<IXmlNamespaceService> XmlNamespaceService = new Mock<IXmlNamespaceService>();
+		private static readonly Mock<IBuildOdfMetadataService> MockMetadataService = new Mock<IBuildOdfMetadataService>();
+		private static readonly Mock<IXmlNamespaceService> MockXmlNamespaceService = new Mock<IXmlNamespaceService>();
+		private static readonly Mock<IxDocumentParserServiceService> MockXDocumentParser = new Mock<IxDocumentParserServiceService>();
 		private readonly byte[] _document = new byte[0];
 
 		private readonly OdfHandlerService _sut = new OdfHandlerService(Mock.Object, MockZipHandler.Object,
-		                                                                MetadataService.Object, XmlNamespaceService.Object);
+		                                                                MockMetadataService.Object, MockXmlNamespaceService.Object, MockXDocumentParser.Object);
 
 
 		private readonly Mock<IZipArchive> _zip = new Mock<IZipArchive>();
@@ -75,7 +76,7 @@ namespace TestProject
 		public void Builds_Metadata_Object()
 		{
 			MockZipHandler.Setup(x => x.GetEntryAsString(_zip.Object, Meta)).Returns(XmlMetadata);
-			MetadataService.Setup(x => x.BuildOdfMetadata(XmlMetadata, XmlNamespaceService.Object))
+			MockMetadataService.Setup(x => x.BuildOdfMetadata(XmlMetadata, MockXmlNamespaceService.Object, MockXDocumentParser.Object))
 			               .Returns(new OdfMetadata(null));
 
 			var documentInformation = _sut.BuildDocumentInformation(_document);
@@ -88,7 +89,7 @@ namespace TestProject
 		public void Builds_Document_Information()
 		{
 			MockZipHandler.Setup(x => x.GetEntryAsString(_zip.Object, Meta)).Returns(XmlMetadata);
-			MetadataService.Setup(x => x.BuildOdfMetadata(XmlMetadata, XmlNamespaceService.Object))
+			MockMetadataService.Setup(x => x.BuildOdfMetadata(XmlMetadata, MockXmlNamespaceService.Object, MockXDocumentParser.Object))
 			               .Returns(new OdfMetadata(null));
 			MockZipHandler.Setup(x => x.GetFileType(_zip.Object)).Returns(OdfHandlerService.FileType.Ods);
 

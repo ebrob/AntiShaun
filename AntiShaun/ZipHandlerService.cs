@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
 
 #endregion
 
@@ -34,12 +33,10 @@ namespace AntiShaun
 		public virtual String GetEntryAsString(IZipArchive archive, string entry)
 		{
 			var zipEntry = GetZipEntry(archive, entry);
-			using (var stream = zipEntry.Open())
+
+			using (var reader = new StreamReader(zipEntry.Open()))
 			{
-				using (var reader = new StreamReader(stream))
-				{
-					return reader.ReadToEnd();
-				}
+				return reader.ReadToEnd();
 			}
 		}
 
