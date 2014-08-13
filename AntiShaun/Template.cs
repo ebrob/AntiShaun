@@ -1,17 +1,4 @@
-﻿/*Copyright 2014 EventBooking.com, LLC
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, 
-software distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and limitations under the License
-*/
-#region
+﻿#region
 
 using System;
 using System.Xml;
@@ -30,15 +17,15 @@ namespace AntiShaun
 
 	public abstract class Template : ITemplate
 	{
-		protected XDocument DocumentContent;
 		protected readonly IXmlNamespaceResolver Manager;
+		protected XDocument DocumentContent;
 
-		protected Template(DocumentInformation documentInformation, IXmlNamespaceService xmlNamespaceService)
+		protected Template( DocumentInformation documentInformation, IXmlNamespaceResolver xmlNamespaceResolver )
 		{
 			OriginalDocument = documentInformation.Document;
 			Meta = documentInformation.Metadata;
 			ConvertDocument(documentInformation.Content);
-			Manager = xmlNamespaceService;
+			Manager = xmlNamespaceResolver;
 		}
 
 		public byte[] OriginalDocument { get; private set; }
@@ -55,7 +42,6 @@ namespace AntiShaun
 			var content = EncodeAtSigns(originalContent);
 			DocumentContent = XDocument.Parse(content);
 		}
-
 
 
 		private static String EncodeAtSigns(String content)

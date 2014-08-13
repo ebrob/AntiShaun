@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:grddl="http://www.w3.org/2003/g/data-view#" office:version="1.2">
+	<office:meta>
+		<dc:date>2014-07-22T11:53:34.552000000</dc:date>
+		<meta:generator>LibreOffice/4.2.5.2$Windows_x86 LibreOffice_project/61cb170a04bb1f12e77c884eab9192be736ec5f5</meta:generator>
+		<meta:editing-duration>PT5S</meta:editing-duration>
+		<meta:editing-cycles>16</meta:editing-cycles>
+		<meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="1" meta:paragraph-count="2" meta:word-count="18" meta:character-count="99" meta:non-whitespace-character-count="85"/>
+		<meta:user-defined meta:name="ModelType">TestModel,TestProject</meta:user-defined>
+	</office:meta>
+</office:document-meta>

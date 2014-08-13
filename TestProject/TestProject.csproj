@@ -109,6 +109,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BuildOdfMetadataServiceTests.cs" />
+    <Compile Include="CompileServiceTests.cs" />
     <Compile Include="IntegrationFullTest.cs" />
     <Compile Include="OdfHandlerServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -127,6 +129,9 @@
     <EmbeddedResource Include="Resources\XMLFile1.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Meta.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
