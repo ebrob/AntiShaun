@@ -3,6 +3,7 @@
 using System.IO;
 using AntiShaun;
 using NUnit.Framework;
+using RazorEngine.Templating;
 using ZipDiff.Core;
 
 #endregion
@@ -33,7 +34,7 @@ namespace TestProject
 
 			var template = templateService.BuildTemplate(document);
 
-			var compileService = new CompileService();
+			var compileService = new CompileService(new TemplateService());
 			compileService.Compile(template, "Template 1");
 
 			var reportService = new ReportGeneratorService(new FileHandlerService());

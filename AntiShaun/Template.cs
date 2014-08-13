@@ -29,7 +29,7 @@ namespace AntiShaun
 		}
 
 		public byte[] OriginalDocument { get; private set; }
-		public OdfMetadata Meta { get; private set; }
+		public virtual OdfMetadata Meta { get; private set; }
 		public string CachedTemplateIdentifier { get; set; }
 
 		public virtual string Content

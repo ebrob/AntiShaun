@@ -18,7 +18,6 @@
 
 #region
 
-using System.Xml;
 using AntiShaun;
 using Moq;
 using NUnit.Framework;
@@ -32,24 +31,21 @@ namespace TestProject
 {
 	internal class CompileServiceTests
 	{
-		private readonly Mock<ITemplateService> _templateService = new Mock<ITemplateService>();
 		private const string CacheName = "cacheID";
-		private readonly CompileService _sut = new CompileService();
 		private const string TemplateString = "template";
-		private ITemplate _template;
+		private readonly CompileService _sut = new CompileService(new TemplateService());
+		private readonly Mock<ITemplate> _template = new Mock<ITemplate>();
+		private readonly Mock<ITemplateService> _templateService = new Mock<ITemplateService>();
 
-		[SetUp]
-		public void Setup ()
-		{
-
-		}
-
+		[Test]
 		public void CompilesTemplate ()
 		{
 			_templateService.Setup( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
-
+			_template.SetupGet( x => x.Meta ).Returns( new OdfMetadata( typeof( object ) ) );
+			_template.SetupGet( x => x.Content ).Returns( TemplateString );
 			Razor.SetTemplateService( _templateService.Object );
-
+			_sut.Compile( _template.Object, CacheName );
+			_templateService.Verify( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
 		}
 	}
 }

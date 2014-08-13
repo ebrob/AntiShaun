@@ -16,6 +16,7 @@
 
 using System;
 using RazorEngine;
+using RazorEngine.Templating;
 
 #endregion
 
@@ -28,10 +29,18 @@ namespace AntiShaun
 
 	public class CompileService : ICompileService
 	{
+		private readonly ITemplateService _templateService;
+
+		public CompileService ( ITemplateService templateService )
+		{
+			_templateService = templateService;
+		}
+
 
 		public void Compile( ITemplate template, String cacheName )
 		{
-			Razor.Compile( template.Content, template.Meta.Type, cacheName );
+
+			_templateService.Compile( template.Content, template.Meta.Type, cacheName );
 			template.CachedTemplateIdentifier = cacheName;
 		}
 	}
