@@ -16,27 +16,20 @@
 
 #endregion
 
-#region
-
-using System;
-
-#endregion
+using System.IO;
 
 namespace AntiShaun
 {
-	public class DocumentInformation
+	public interface IStreamReaderWrapperFactory
 	{
-		public DocumentInformation( OdfHandlerService.FileType fileType, Byte[] document, string content, OdfMetadata metadata )
-		{
-			FileType = fileType;
-			Document = document;
-			Content = content;
-			Metadata = metadata;
-		}
+		IStreamReaderWrapper BuildStreamReaderWrapper( Stream stream );
+	}
 
-		public virtual OdfHandlerService.FileType FileType { get; private set; }
-		public virtual Byte[] Document { get; private set; }
-		public virtual String Content { get; private set; }
-		public virtual OdfMetadata Metadata { get; private set; }
+	public class StreamReaderWrapperFactory : IStreamReaderWrapperFactory
+	{
+		public IStreamReaderWrapper BuildStreamReaderWrapper( Stream stream )
+		{
+			return new StreamReaderWrapper(stream);
+		}
 	}
 }

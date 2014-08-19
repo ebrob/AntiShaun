@@ -33,19 +33,19 @@ namespace TestProject
 	{
 		private const string CacheName = "cacheID";
 		private const string TemplateString = "template";
-		private readonly CompileService _sut = new CompileService(new TemplateService());
+		private static readonly Mock<ITemplateService> TemplateService = new Mock<ITemplateService>();
+
+		private readonly CompileService _sut = new CompileService( TemplateService.Object );
 		private readonly Mock<ITemplate> _template = new Mock<ITemplate>();
-		private readonly Mock<ITemplateService> _templateService = new Mock<ITemplateService>();
 
 		[Test]
 		public void CompilesTemplate ()
 		{
-			_templateService.Setup( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
+			TemplateService.Setup( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
 			_template.SetupGet( x => x.Meta ).Returns( new OdfMetadata( typeof( object ) ) );
 			_template.SetupGet( x => x.Content ).Returns( TemplateString );
-			Razor.SetTemplateService( _templateService.Object );
 			_sut.Compile( _template.Object, CacheName );
-			_templateService.Verify( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
+			TemplateService.Verify( x => x.Compile( TemplateString, typeof( object ), CacheName ) );
 		}
 	}
 }

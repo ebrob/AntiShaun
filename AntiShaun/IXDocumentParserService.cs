@@ -11,7 +11,7 @@ namespace AntiShaun
 		XDocument Parse(string text);
 	}
 
-	public class IxDocumentParserServiceService : IXDocumentParserService
+	public class XDocumentParserService : IXDocumentParserService
 	{
 		public XDocument Parse(string text)
 		{

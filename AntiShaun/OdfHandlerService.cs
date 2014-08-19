@@ -31,16 +31,16 @@ namespace AntiShaun
 
 		private readonly IBuildOdfMetadataService _buildOdfMetadataService;
 
-		private readonly IFileHandlerService _fileHandlerService;
+		private readonly IZipFactory _zipFactory;
 		private readonly IXDocumentParserService _ixDocumentParserService;
 		private readonly IXmlNamespaceResolver _manager;
 		private readonly IZipHandlerService _zipHandlerService;
 
-		public OdfHandlerService( IFileHandlerService fileHandlerService, IZipHandlerService zipHandlerService,
+		public OdfHandlerService( IZipFactory zipFactory, IZipHandlerService zipHandlerService,
 								  IBuildOdfMetadataService buildOdfMetadataService, IXmlNamespaceResolver xmlNamespaceService,
 		                          IXDocumentParserService ixDocumentParserService )
 		{
-			_fileHandlerService = fileHandlerService;
+			_zipFactory = zipFactory;
 			_zipHandlerService = zipHandlerService;
 			_buildOdfMetadataService = buildOdfMetadataService;
 			_manager = xmlNamespaceService;
@@ -52,7 +52,7 @@ namespace AntiShaun
 			var informationDocument = new byte[document.Length];
 			document.CopyTo( informationDocument, 0 );
 
-			using( var archive = _fileHandlerService.ZipArchiveFromDocument( document ) )
+			using( var archive = _zipFactory.ZipArchiveFromDocument( document ) )
 			{
 				var fileType = _zipHandlerService.GetFileType( archive );
 				var content = _zipHandlerService.GetEntryAsString( archive, "content.xml" );

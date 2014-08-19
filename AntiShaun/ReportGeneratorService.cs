@@ -1,8 +1,10 @@
 ﻿#region
 
+using System;
 using System.IO;
 using System.IO.Compression;
 using RazorEngine;
+using RazorEngine.Templating;
 
 #endregion
 
@@ -10,22 +12,25 @@ namespace AntiShaun
 {
 	public class ReportGeneratorService
 	{
-		private readonly IFileHandlerService _fileHandlerService;
+		private readonly IZipFactory _zipFactory;
 
-		public ReportGeneratorService(IFileHandlerService fileHandlerService)
+		public ReportGeneratorService(IZipFactory zipFactory)
 		{
-			_fileHandlerService = fileHandlerService;
+			_zipFactory = zipFactory;
 		}
 
 
-		public void BuildReport(Template template, object model, Stream outputStream)
+		public void BuildReport(Template template, object model, Stream outputStream, ITemplateService templateService)
 		{
-			var newByteArray = _fileHandlerService.Copy(template.OriginalDocument);
+			byte[] original = template.OriginalDocument;
+			var newByteArray1 = new byte[original.Length];
+			Buffer.BlockCopy(original, 0, newByteArray1, 0, Buffer.ByteLength(original));
+			var newByteArray = newByteArray1;
 			using (var interimStream = new MemoryStream(newByteArray))
 			{
-				using (var archive = _fileHandlerService.ZipArchiveFromStream(interimStream, ZipArchiveMode.Update))
+				using (var archive = _zipFactory.ZipArchiveFromStream(interimStream, ZipArchiveMode.Update))
 				{
-					var reportText = Razor.Run(template.CachedTemplateIdentifier, model);
+					var reportText = templateService.Run(template.CachedTemplateIdentifier, model, null);
 					reportText = reportText.Replace("U+10FFFD", "@");
 					var content = archive.GetEntry("content.xml");
 					content.Delete();
