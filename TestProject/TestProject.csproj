@@ -139,7 +139,10 @@
     <EmbeddedResource Include="Meta.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="content.xml" />
+    <EmbeddedResource Include="OdsContent.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="OdtContent.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

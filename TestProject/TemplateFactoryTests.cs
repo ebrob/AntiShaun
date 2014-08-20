@@ -40,34 +40,58 @@ namespace TestProject
 		private readonly XmlNamespaceService _xmlNamespaceService = new XmlNamespaceService();
 		private DocumentInformation _odtDocumentInformation;
 
-		[SetUp]
-		public void SetUp ()
+		[Test]
+		public void GeneratesOdtTemplate ()
 		{
 			var asm = Assembly.GetExecutingAssembly();
-			using( var stream = asm.GetManifestResourceStream( "TestProject.content.xml" ) )
+			using( var stream = asm.GetManifestResourceStream( "TestProject.OdtContent.xml" ) )
 			{
 				if( stream == null ) return;
 				var reader = new StreamReader( stream );
 				_content = reader.ReadToEnd();
 			}
 
+
 			_odtDocumentInformation = new DocumentInformation(
 				OdfHandlerService.FileType.Odt,
 				new byte[0], _content,
 				new OdfMetadata( typeof( object ) ) );
-		}
 
 
-		[Test]
-		public void GeneratesOdtTemplate ()
-		{
-			_xDocumentParserService.Setup( x => x.Parse( _content ) ).Returns( XDocument.Parse( _content ) );
+			_xDocumentParserService.Setup( x => x.Parse( It.IsAny<string>() ) ).Returns( XDocument.Parse( _content ) );
 
 
 			_sut.GenerateTemplate( _odtDocumentInformation, _xmlNamespaceService, _xDocumentParserService.Object );
 
 
-			_xDocumentParserService.Verify( x => x.Parse( _content ) );
+			_xDocumentParserService.Verify( x => x.Parse( It.IsAny<string>() ) );
+		}
+
+		[Test]
+		public void GeneratesOdsTemplate ()
+		{
+			var asm = Assembly.GetExecutingAssembly();
+			using( var stream = asm.GetManifestResourceStream( "TestProject.OdsContent.xml" ) )
+			{
+				if( stream == null ) return;
+				var reader = new StreamReader( stream );
+				_content = reader.ReadToEnd();
+			}
+
+
+			_odtDocumentInformation = new DocumentInformation(
+				OdfHandlerService.FileType.Ods,
+				new byte[0], _content,
+				new OdfMetadata( typeof( object ) ) );
+
+
+			_xDocumentParserService.Setup( x => x.Parse( It.IsAny<string>() ) ).Returns( XDocument.Parse( _content ) );
+
+
+			_sut.GenerateTemplate( _odtDocumentInformation, _xmlNamespaceService, _xDocumentParserService.Object );
+
+
+			_xDocumentParserService.Verify( x => x.Parse( It.IsAny<string>() ) );
 		}
 	}
 }
