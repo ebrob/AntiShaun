@@ -28,6 +28,7 @@ namespace AntiShaun
 {
 	public interface ITemplate
 	{
+		byte[] OriginalDocument { get; }
 		OdfMetadata Meta { get; }
 		string CachedTemplateIdentifier { get; set; }
 		string Content { get; }

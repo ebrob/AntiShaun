@@ -115,6 +115,7 @@
     <Compile Include="OdfHandlerServiceTests.cs" />
     <Compile Include="OdsTemplateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportGeneratorServiceTests.cs" />
     <Compile Include="TemplateFactoryTests.cs" />
     <Compile Include="TestModel.cs" />
     <Compile Include="XDocumentParserServiceTests.cs" />

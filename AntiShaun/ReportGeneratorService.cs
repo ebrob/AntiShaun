@@ -27,7 +27,12 @@ using RazorEngine.Templating;
 
 namespace AntiShaun
 {
-	public class ReportGeneratorService
+	public interface IReportGeneratorService
+	{
+		void BuildReport( ITemplate template, object model, Stream outputStream, ITemplateService templateService );
+	}
+
+	public class ReportGeneratorService : IReportGeneratorService
 	{
 		private readonly IZipFactory _zipFactory;
 
@@ -37,7 +42,7 @@ namespace AntiShaun
 		}
 
 
-		public void BuildReport( Template template, object model, Stream outputStream, ITemplateService templateService )
+		public void BuildReport( ITemplate template, object model, Stream outputStream, ITemplateService templateService )
 		{
 			var original = template.OriginalDocument;
 			var newByteArray = new byte[original.Length];
