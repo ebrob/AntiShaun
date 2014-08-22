@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>AntiShaun</id>
+    <version>$version$</version>
+    <title>AntiShaun Reporting Library</title>
+    <authors>EventBooking.com, LLC and Calvin Scott</authors>
+    <owners>EventBooking.com, LLC</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/EventBooking/AntiShaun</projectUrl>
+    <iconUrl></iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>POCO-model-based template reporting library for .NET</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>Report Reports Reporting .NET C#</tags>
+  </metadata>
+</package>
