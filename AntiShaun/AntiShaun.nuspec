@@ -8,7 +8,6 @@
     <owners>EventBooking.com, LLC</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/EventBooking/AntiShaun</projectUrl>
-    <iconUrl></iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>POCO-model-based template reporting library for .NET</description>
     <releaseNotes></releaseNotes>
