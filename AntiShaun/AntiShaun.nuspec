@@ -14,5 +14,10 @@
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2014</copyright>
     <tags>Report Reports Reporting .NET C#</tags>
+    <dependencies>
+      <dependency id="Ensure.That" version="2.0.0" />
+      <dependency id="Microsoft.AspNet.Razor" version="3.0.0" />
+      <dependency id="RazorEngine" version="3.4.1" />
+    </dependencies>
   </metadata>
 </package>
