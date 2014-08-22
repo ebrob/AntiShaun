@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 using EnsureThat;
 
@@ -26,22 +27,19 @@ namespace AntiShaun
 			_manager.AddNamespace("meta", "urn:oasis:names:tc:opendocument:xmlns:meta:1.0");
 		}
 
+		[ExcludeFromCodeCoverage]
 		public IDictionary<string, string> GetNamespacesInScope(XmlNamespaceScope scope)
 		{
-			var namespaces = _manager.GetNamespacesInScope(scope);
-			Ensure.That(namespaces, "Namespaces").IsNotNull();
-			if (namespaces != null)
-			{
-				return namespaces;
-			}
-			throw new NullReferenceException("Namespaces are null");
+			return _manager.GetNamespacesInScope(scope);
 		}
 
+		[ExcludeFromCodeCoverage]
 		public string LookupNamespace(string prefix)
 		{
 			return _manager.LookupNamespace(prefix);
 		}
 
+		[ExcludeFromCodeCoverage]
 		public string LookupPrefix(string uri)
 		{
 			return _manager.LookupPrefix(uri);

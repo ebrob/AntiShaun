@@ -9,12 +9,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("DataInjector")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("AntiShaun")]
+[assembly: AssemblyDescription("POCO-model-based reporting library.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DataInjector")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("AntiShaun")]
+[assembly: AssemblyCopyright("Copyright ©  2014 by EventBooking.com, LLC and Calvin Scott")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
