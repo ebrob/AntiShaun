@@ -60,10 +60,10 @@ namespace TestProject
 			var compileService = new CompileService( razorTemplateService );
 			compileService.Compile( template, "Template 1" );
 
-			var reportService = new ReportGeneratorService( new ZipFactory() );
+			var reportService = new ReportGeneratorService( new ZipFactory(), razorTemplateService );
 			using( var report = new FileStream( reportPath, FileMode.Create ) )
 			{
-				reportService.BuildReport( template, new BasicModel {Name = "Fancypants McSnooterson"}, report, razorTemplateService );
+				reportService.BuildReport( template, new BasicModel {Name = "Fancypants McSnooterson"}, report );
 			}
 			var diffs = GetDifferences( expectedReportPath, reportPath );
 			var thereAreDifferences = diffs.HasDifferences();

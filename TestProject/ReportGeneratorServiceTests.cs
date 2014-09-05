@@ -33,11 +33,14 @@ namespace TestProject
 	internal class ReportGeneratorServiceTests
 	{
 		private static readonly Mock<IZipFactory> MockZipFactory = new Mock<IZipFactory>();
+		private static readonly Mock<ITemplateService> MockTemplateService = new Mock<ITemplateService>();
 		private readonly Mock<ITemplate> _mockTemplate = new Mock<ITemplate>();
-		private readonly Mock<ITemplateService> _mockTemplateService = new Mock<ITemplateService>();
 		private readonly Mock<IZipArchive> _mockZipArchive = new Mock<IZipArchive>();
 		private readonly Mock<IZipEntry> _mockZipEntry = new Mock<IZipEntry>();
-		private readonly ReportGeneratorService _sut = new ReportGeneratorService( MockZipFactory.Object );
+
+		private readonly ReportGeneratorService _sut = new ReportGeneratorService( MockZipFactory.Object,
+		                                                                           MockTemplateService.Object );
+
 		private readonly Stream _testStream = new MemoryStream();
 
 
@@ -47,12 +50,16 @@ namespace TestProject
 			MockZipFactory.Setup( x => x.ZipArchiveFromStream( It.IsAny<Stream>(), ZipArchiveMode.Update ) )
 			              .Returns( _mockZipArchive.Object );
 
-			_mockTemplateService.Setup( x => x.Run( It.IsAny<string>(), It.IsAny<object>(), null ) )
-			                    .Returns( "hello, this is a test string" );
+			MockTemplateService.Setup( x => x.Run( It.IsAny<string>(), It.IsAny<object>(), null ) )
+			                   .Returns( "hello, this is a test string" );
+
+			_mockZipArchive.Setup( x => x.CreateEntry( "content.xml" ) ).Returns( _mockZipEntry.Object );
+
+			_mockZipEntry.Setup( x => x.Open() ).Returns( new MemoryStream() );
 
 			_mockZipArchive.Setup( x => x.GetEntry( "content.xml" ) ).Returns( _mockZipEntry.Object );
 
-			_sut.BuildReport( _mockTemplate.Object, typeof( TestModel ), _testStream, _mockTemplateService.Object );
+			_sut.BuildReport( _mockTemplate.Object, typeof( TestModel ), _testStream );
 		}
 	}
 }

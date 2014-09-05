@@ -24,7 +24,7 @@ namespace AntiShaun
 		{
 			_entries = new List<IZipEntry>();
 			_zip = new ZipArchive(stream, mode, leaveOpen);
-			foreach (var zipEntry in _zip.Entries)
+			foreach (var zipEntry in _zip.Entries) 
 			{
 				_entries.Add(new ZipEntry(zipEntry));
 			}
@@ -36,7 +36,7 @@ namespace AntiShaun
 			_entries.Add(entry);
 			return entry;
 		}
-
+		 
 		public void Dispose()
 		{
 			_zip.Dispose();

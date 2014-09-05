@@ -29,20 +29,22 @@ namespace AntiShaun
 {
 	public interface IReportGeneratorService
 	{
-		void BuildReport( ITemplate template, object model, Stream outputStream, ITemplateService templateService );
+		void BuildReport( ITemplate template, object model, Stream outputStream );
 	}
 
 	public class ReportGeneratorService : IReportGeneratorService
 	{
+		private readonly ITemplateService _templateService;
 		private readonly IZipFactory _zipFactory;
 
-		public ReportGeneratorService( IZipFactory zipFactory )
+		public ReportGeneratorService( IZipFactory zipFactory, ITemplateService templateService )
 		{
 			_zipFactory = zipFactory;
+			_templateService = templateService;
 		}
 
 
-		public void BuildReport( ITemplate template, object model, Stream outputStream, ITemplateService templateService )
+		public void BuildReport( ITemplate template, object model, Stream outputStream )
 		{
 			var original = template.OriginalDocument;
 			var newByteArray = new byte[original.Length];
@@ -51,7 +53,7 @@ namespace AntiShaun
 			{
 				using( var archive = _zipFactory.ZipArchiveFromStream( interimStream, ZipArchiveMode.Update ) )
 				{
-					var reportText = templateService.Run( template.CachedTemplateIdentifier, model, null );
+					var reportText = _templateService.Run( template.CachedTemplateIdentifier, model, null );
 					reportText = reportText.Replace( "U+10FFFD", "@" );
 					var content = archive.GetEntry( "content.xml" );
 					content.Delete();
