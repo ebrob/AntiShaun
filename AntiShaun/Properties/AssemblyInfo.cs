@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AntiShaun")]
-[assembly: AssemblyCopyright("Copyright ©  2014 by EventBooking.com, LLC and Calvin Scott")]
+[assembly: AssemblyCopyright("Copyright © 2014 by EventBooking.com, LLC and Calvin Scott")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
