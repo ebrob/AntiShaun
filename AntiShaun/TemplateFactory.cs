@@ -48,4 +48,4 @@ namespace AntiShaun
 				"Only ods and odt files are supported at this time, and this error should have been caught on pattern initialization." );
 		}
 	}
-}
+} 
